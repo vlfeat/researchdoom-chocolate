@@ -37,4 +37,6 @@ tags
 .#*
 .*.swp
 .DS_store
+doom.xcodeproj/xcuserdata/
+doom.xcodeproj/project.xcworkspace/xcuserdata/
 bin/doom
