@@ -38,6 +38,7 @@
 		</VirtualTargets>
 		<Compiler>
 			<Add directory="../src" />
+			<Add directory="/usr/include/SDL" />
 		</Compiler>
 		<Linker>
 			<Add option="-lmingw32 -lSDLmain -lSDL -mwindows" />

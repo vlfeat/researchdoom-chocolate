@@ -1,0 +1,298 @@
+# depslib dependency file v1.0
+1466336871 source:/data/aravindh/researchdoom/opl/ioperm_sys.c
+	<stdio.h>
+	<windows.h>
+	<winioctl.h>
+	<errno.h>
+	"ioperm_sys.h"
+
+1466336871 /data/aravindh/researchdoom/opl/ioperm_sys.h
+
+1466336871 source:/data/aravindh/researchdoom/opl/opl.c
+	"config.h"
+	<stdio.h>
+	<stdlib.h>
+	"SDL.h"
+	"opl.h"
+	"opl_internal.h"
+
+1466336871 /data/aravindh/researchdoom/codeblocks/config.h
+
+1448018362 /usr/include/SDL/SDL.h
+	"SDL_main.h"
+	"SDL_stdinc.h"
+	"SDL_audio.h"
+	"SDL_cdrom.h"
+	"SDL_cpuinfo.h"
+	"SDL_endian.h"
+	"SDL_error.h"
+	"SDL_events.h"
+	"SDL_loadso.h"
+	"SDL_mutex.h"
+	"SDL_rwops.h"
+	"SDL_thread.h"
+	"SDL_timer.h"
+	"SDL_video.h"
+	"SDL_version.h"
+	"begin_code.h"
+	"close_code.h"
+
+1448018362 /usr/include/SDL/SDL_main.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+	"begin_code.h"
+	"close_code.h"
+
+1448018362 /usr/include/SDL/SDL_stdinc.h
+	"SDL_config.h"
+	<sys/types.h>
+	<stdio.h>
+	<stdlib.h>
+	<stddef.h>
+	<stdarg.h>
+	<stdlib.h>
+	<malloc.h>
+	<stddef.h>
+	<stdarg.h>
+	<memory.h>
+	<string.h>
+	<strings.h>
+	<inttypes.h>
+	<stdint.h>
+	<ctype.h>
+	<iconv.h>
+	"begin_code.h"
+	<alloca.h>
+	<malloc.h>
+	<malloc.h>
+	<malloc.h>
+	<stdlib.h>
+	"close_code.h"
+
+1448018363 /usr/include/SDL/SDL_config.h
+	"SDL_config-i386.h"
+	"SDL_config-ia64.h"
+	"SDL_config-ppc64.h"
+	"SDL_config-ppc64le.h"
+	"SDL_config-ppc.h"
+	"SDL_config-s390x.h"
+	"SDL_config-s390.h"
+	"SDL_config-x86_64.h"
+	"SDL_config-arm.h"
+	"SDL_config-alpha.h"
+	"SDL_config-sparc64.h"
+	"SDL_config-sparc.h"
+	"SDL_config-aarch64.h"
+
+1448018362 /usr/include/SDL/SDL_config-x86_64.h
+	"SDL_platform.h"
+	<stdarg.h>
+
+1448018362 /usr/include/SDL/SDL_platform.h
+
+1448018362 /usr/include/SDL/begin_code.h
+
+1448018362 /usr/include/SDL/close_code.h
+
+1448018362 /usr/include/SDL/SDL_audio.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_endian.h"
+	"SDL_mutex.h"
+	"SDL_thread.h"
+	"SDL_rwops.h"
+	"begin_code.h"
+	"close_code.h"
+
+1448018362 /usr/include/SDL/SDL_error.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1448018362 /usr/include/SDL/SDL_endian.h
+	"SDL_stdinc.h"
+	<endian.h>
+	"begin_code.h"
+	"close_code.h"
+
+1448018362 /usr/include/SDL/SDL_mutex.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1448018362 /usr/include/SDL/SDL_thread.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_mutex.h"
+	"begin_code.h"
+	<process.h>
+	"close_code.h"
+
+1448018362 /usr/include/SDL/SDL_rwops.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1448018362 /usr/include/SDL/SDL_cdrom.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1448018362 /usr/include/SDL/SDL_cpuinfo.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1448018362 /usr/include/SDL/SDL_events.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_active.h"
+	"SDL_keyboard.h"
+	"SDL_mouse.h"
+	"SDL_joystick.h"
+	"SDL_quit.h"
+	"begin_code.h"
+	"close_code.h"
+
+1448018362 /usr/include/SDL/SDL_active.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1448018362 /usr/include/SDL/SDL_keyboard.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_keysym.h"
+	"begin_code.h"
+	"close_code.h"
+
+1448018362 /usr/include/SDL/SDL_keysym.h
+
+1448018362 /usr/include/SDL/SDL_mouse.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1448018362 /usr/include/SDL/SDL_video.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_rwops.h"
+	"begin_code.h"
+	"close_code.h"
+
+1448018362 /usr/include/SDL/SDL_joystick.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1448018362 /usr/include/SDL/SDL_quit.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+
+1448018362 /usr/include/SDL/SDL_loadso.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1448018362 /usr/include/SDL/SDL_timer.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1448018362 /usr/include/SDL/SDL_version.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1466336871 /data/aravindh/researchdoom/opl/opl.h
+	<inttypes.h>
+
+1466336871 /data/aravindh/researchdoom/opl/opl_internal.h
+	"opl.h"
+
+1466336871 source:/data/aravindh/researchdoom/opl/opl_linux.c
+	"config.h"
+	<stdio.h>
+	<string.h>
+	<errno.h>
+	<unistd.h>
+	<sys/io.h>
+	"opl.h"
+	"opl_internal.h"
+	"opl_timer.h"
+
+1466336871 /data/aravindh/researchdoom/opl/opl_timer.h
+	"opl.h"
+
+1466336871 source:/data/aravindh/researchdoom/opl/opl_obsd.c
+	"config.h"
+	<sys/types.h>
+	<machine/sysarch.h>
+	<i386/pio.h>
+	<sys/types.h>
+	<machine/sysarch.h>
+	<amd64/pio.h>
+	<stdio.h>
+	<string.h>
+	<errno.h>
+	<unistd.h>
+	"opl.h"
+	"opl_internal.h"
+	"opl_timer.h"
+
+1466336871 source:/data/aravindh/researchdoom/opl/opl_queue.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"opl_queue.h"
+	<assert.h>
+
+1466336871 /data/aravindh/researchdoom/opl/opl_queue.h
+	"opl.h"
+
+1466336871 source:/data/aravindh/researchdoom/opl/opl_sdl.c
+	"config.h"
+	<stdio.h>
+	<string.h>
+	<errno.h>
+	<assert.h>
+	"SDL.h"
+	"SDL_mixer.h"
+	"opl3.h"
+	"opl.h"
+	"opl_internal.h"
+	"opl_queue.h"
+
+1466336871 /data/aravindh/researchdoom/opl/opl3.h
+	<inttypes.h>
+
+1466336871 source:/data/aravindh/researchdoom/opl/opl_timer.c
+	"SDL.h"
+	"opl_timer.h"
+	"opl_queue.h"
+
+1466336871 source:/data/aravindh/researchdoom/opl/opl_win32.c
+	"config.h"
+	<stdio.h>
+	<windows.h>
+	"opl.h"
+	"opl_internal.h"
+	"opl_timer.h"
+	"ioperm_sys.h"
+
+1466336871 source:/data/aravindh/researchdoom/opl/opl3.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"opl3.h"
+

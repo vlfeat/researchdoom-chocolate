@@ -1,0 +1,487 @@
+# depslib dependency file v1.0
+1466336871 source:/data/aravindh/researchdoom/textscreen/txt_button.c
+	<stdlib.h>
+	<string.h>
+	"doomkeys.h"
+	"txt_button.h"
+	"txt_gui.h"
+	"txt_io.h"
+	"txt_main.h"
+	"txt_window.h"
+
+1466336871 /data/aravindh/researchdoom/src/doomkeys.h
+
+1466336871 /data/aravindh/researchdoom/textscreen/txt_button.h
+	"txt_widget.h"
+
+1466336871 /data/aravindh/researchdoom/textscreen/txt_widget.h
+
+1466336871 /data/aravindh/researchdoom/textscreen/txt_gui.h
+
+1466336871 /data/aravindh/researchdoom/textscreen/txt_io.h
+	"txt_main.h"
+
+1466336871 /data/aravindh/researchdoom/textscreen/txt_main.h
+	"txt_sdl.h"
+
+1466336871 /data/aravindh/researchdoom/textscreen/txt_sdl.h
+	"SDL.h"
+
+1448018362 /usr/include/SDL/SDL.h
+	"SDL_main.h"
+	"SDL_stdinc.h"
+	"SDL_audio.h"
+	"SDL_cdrom.h"
+	"SDL_cpuinfo.h"
+	"SDL_endian.h"
+	"SDL_error.h"
+	"SDL_events.h"
+	"SDL_loadso.h"
+	"SDL_mutex.h"
+	"SDL_rwops.h"
+	"SDL_thread.h"
+	"SDL_timer.h"
+	"SDL_video.h"
+	"SDL_version.h"
+	"begin_code.h"
+	"close_code.h"
+
+1448018362 /usr/include/SDL/SDL_main.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+	"begin_code.h"
+	"close_code.h"
+
+1448018362 /usr/include/SDL/SDL_stdinc.h
+	"SDL_config.h"
+	<sys/types.h>
+	<stdio.h>
+	<stdlib.h>
+	<stddef.h>
+	<stdarg.h>
+	<stdlib.h>
+	<malloc.h>
+	<stddef.h>
+	<stdarg.h>
+	<memory.h>
+	<string.h>
+	<strings.h>
+	<inttypes.h>
+	<stdint.h>
+	<ctype.h>
+	<iconv.h>
+	"begin_code.h"
+	<alloca.h>
+	<malloc.h>
+	<malloc.h>
+	<malloc.h>
+	<stdlib.h>
+	"close_code.h"
+
+1448018363 /usr/include/SDL/SDL_config.h
+	"SDL_config-i386.h"
+	"SDL_config-ia64.h"
+	"SDL_config-ppc64.h"
+	"SDL_config-ppc64le.h"
+	"SDL_config-ppc.h"
+	"SDL_config-s390x.h"
+	"SDL_config-s390.h"
+	"SDL_config-x86_64.h"
+	"SDL_config-arm.h"
+	"SDL_config-alpha.h"
+	"SDL_config-sparc64.h"
+	"SDL_config-sparc.h"
+	"SDL_config-aarch64.h"
+
+1448018362 /usr/include/SDL/SDL_config-x86_64.h
+	"SDL_platform.h"
+	<stdarg.h>
+
+1448018362 /usr/include/SDL/SDL_platform.h
+
+1448018362 /usr/include/SDL/begin_code.h
+
+1448018362 /usr/include/SDL/close_code.h
+
+1448018362 /usr/include/SDL/SDL_audio.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_endian.h"
+	"SDL_mutex.h"
+	"SDL_thread.h"
+	"SDL_rwops.h"
+	"begin_code.h"
+	"close_code.h"
+
+1448018362 /usr/include/SDL/SDL_error.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1448018362 /usr/include/SDL/SDL_endian.h
+	"SDL_stdinc.h"
+	<endian.h>
+	"begin_code.h"
+	"close_code.h"
+
+1448018362 /usr/include/SDL/SDL_mutex.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1448018362 /usr/include/SDL/SDL_thread.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_mutex.h"
+	"begin_code.h"
+	<process.h>
+	"close_code.h"
+
+1448018362 /usr/include/SDL/SDL_rwops.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1448018362 /usr/include/SDL/SDL_cdrom.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1448018362 /usr/include/SDL/SDL_cpuinfo.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1448018362 /usr/include/SDL/SDL_events.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_active.h"
+	"SDL_keyboard.h"
+	"SDL_mouse.h"
+	"SDL_joystick.h"
+	"SDL_quit.h"
+	"begin_code.h"
+	"close_code.h"
+
+1448018362 /usr/include/SDL/SDL_active.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1448018362 /usr/include/SDL/SDL_keyboard.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_keysym.h"
+	"begin_code.h"
+	"close_code.h"
+
+1448018362 /usr/include/SDL/SDL_keysym.h
+
+1448018362 /usr/include/SDL/SDL_mouse.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1448018362 /usr/include/SDL/SDL_video.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_rwops.h"
+	"begin_code.h"
+	"close_code.h"
+
+1448018362 /usr/include/SDL/SDL_joystick.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1448018362 /usr/include/SDL/SDL_quit.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+
+1448018362 /usr/include/SDL/SDL_loadso.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1448018362 /usr/include/SDL/SDL_timer.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1448018362 /usr/include/SDL/SDL_version.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1466336871 /data/aravindh/researchdoom/textscreen/txt_window.h
+	"txt_widget.h"
+	"txt_table.h"
+	"txt_window_action.h"
+
+1466336871 /data/aravindh/researchdoom/textscreen/txt_table.h
+	"txt_widget.h"
+
+1466336871 /data/aravindh/researchdoom/textscreen/txt_window_action.h
+	"txt_widget.h"
+	"txt_window.h"
+
+1466336871 source:/data/aravindh/researchdoom/textscreen/txt_checkbox.c
+	<stdlib.h>
+	<string.h>
+	"doomkeys.h"
+	"txt_checkbox.h"
+	"txt_gui.h"
+	"txt_io.h"
+	"txt_main.h"
+	"txt_window.h"
+
+1466336871 /data/aravindh/researchdoom/textscreen/txt_checkbox.h
+	"txt_widget.h"
+
+1466336871 source:/data/aravindh/researchdoom/textscreen/txt_desktop.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"doomkeys.h"
+	"txt_desktop.h"
+	"txt_gui.h"
+	"txt_io.h"
+	"txt_main.h"
+	"txt_separator.h"
+	"txt_window.h"
+
+1466336871 /data/aravindh/researchdoom/textscreen/txt_desktop.h
+	"txt_window.h"
+
+1466336871 /data/aravindh/researchdoom/textscreen/txt_separator.h
+	"txt_widget.h"
+
+1466336871 source:/data/aravindh/researchdoom/textscreen/txt_dropdown.c
+	<stdlib.h>
+	<string.h>
+	"doomkeys.h"
+	"txt_button.h"
+	"txt_dropdown.h"
+	"txt_gui.h"
+	"txt_io.h"
+	"txt_main.h"
+	"txt_window.h"
+
+1466336871 /data/aravindh/researchdoom/textscreen/txt_dropdown.h
+	"txt_widget.h"
+
+1466336871 source:/data/aravindh/researchdoom/textscreen/txt_fileselect.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"doomkeys.h"
+	"txt_fileselect.h"
+	"txt_inputbox.h"
+	"txt_main.h"
+	"txt_widget.h"
+	<fcntl.h>
+	<unistd.h>
+	<errno.h>
+	<sys/wait.h>
+	<windows.h>
+	<shlobj.h>
+
+1466336871 /data/aravindh/researchdoom/textscreen/txt_fileselect.h
+
+1466336871 /data/aravindh/researchdoom/textscreen/txt_inputbox.h
+	"txt_widget.h"
+
+1466336871 source:/data/aravindh/researchdoom/textscreen/txt_gui.c
+	<stdlib.h>
+	<string.h>
+	"txt_gui.h"
+	"txt_io.h"
+	"txt_main.h"
+	"txt_utf8.h"
+
+1466336871 /data/aravindh/researchdoom/textscreen/txt_utf8.h
+	<stdarg.h>
+
+1466336871 source:/data/aravindh/researchdoom/textscreen/txt_inputbox.c
+	<ctype.h>
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"doomkeys.h"
+	"txt_inputbox.h"
+	"txt_gui.h"
+	"txt_io.h"
+	"txt_main.h"
+	"txt_utf8.h"
+	"txt_window.h"
+
+1466336871 source:/data/aravindh/researchdoom/textscreen/txt_io.c
+	<stdlib.h>
+	<string.h>
+	"txt_io.h"
+	"txt_main.h"
+
+1466336871 source:/data/aravindh/researchdoom/textscreen/txt_label.c
+	<stdlib.h>
+	<string.h>
+	"txt_label.h"
+	"txt_gui.h"
+	"txt_io.h"
+	"txt_main.h"
+	"txt_utf8.h"
+	"txt_window.h"
+
+1466336871 /data/aravindh/researchdoom/textscreen/txt_label.h
+	"txt_main.h"
+	"txt_widget.h"
+
+1466336871 source:/data/aravindh/researchdoom/textscreen/txt_radiobutton.c
+	<stdlib.h>
+	<string.h>
+	"doomkeys.h"
+	"txt_radiobutton.h"
+	"txt_gui.h"
+	"txt_io.h"
+	"txt_main.h"
+	"txt_window.h"
+
+1466336871 /data/aravindh/researchdoom/textscreen/txt_radiobutton.h
+	"txt_widget.h"
+
+1466336871 source:/data/aravindh/researchdoom/textscreen/txt_scrollpane.c
+	<ctype.h>
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<math.h>
+	"txt_scrollpane.h"
+	"txt_gui.h"
+	"txt_io.h"
+	"txt_main.h"
+	"txt_table.h"
+	"doomkeys.h"
+
+1466336871 /data/aravindh/researchdoom/textscreen/txt_scrollpane.h
+	"txt_widget.h"
+
+1466336871 source:/data/aravindh/researchdoom/textscreen/txt_sdl.c
+	"SDL.h"
+	<ctype.h>
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"doomkeys.h"
+	"txt_main.h"
+	"txt_sdl.h"
+	"txt_font.h"
+	"txt_largefont.h"
+	"txt_smallfont.h"
+	<windows.h>
+
+1466336871 /data/aravindh/researchdoom/textscreen/txt_font.h
+
+1466336871 /data/aravindh/researchdoom/textscreen/txt_largefont.h
+
+1466336871 /data/aravindh/researchdoom/textscreen/txt_smallfont.h
+
+1466336871 source:/data/aravindh/researchdoom/textscreen/txt_separator.c
+	<stdlib.h>
+	<string.h>
+	"txt_separator.h"
+	"txt_gui.h"
+	"txt_io.h"
+	"txt_main.h"
+	"txt_window.h"
+
+1466336871 source:/data/aravindh/researchdoom/textscreen/txt_spinctrl.c
+	<ctype.h>
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<math.h>
+	"doomkeys.h"
+	"txt_spinctrl.h"
+	"txt_gui.h"
+	"txt_io.h"
+	"txt_main.h"
+	"txt_window.h"
+
+1466336871 /data/aravindh/researchdoom/textscreen/txt_spinctrl.h
+	"txt_widget.h"
+
+1466336871 source:/data/aravindh/researchdoom/textscreen/txt_strut.c
+	<stdlib.h>
+	<string.h>
+	"doomkeys.h"
+	"txt_strut.h"
+	"txt_io.h"
+	"txt_main.h"
+	"txt_window.h"
+
+1466336871 /data/aravindh/researchdoom/textscreen/txt_strut.h
+	"txt_widget.h"
+
+1466336871 source:/data/aravindh/researchdoom/textscreen/txt_table.c
+	<stdarg.h>
+	<stdlib.h>
+	<string.h>
+	"doomkeys.h"
+	"txt_desktop.h"
+	"txt_gui.h"
+	"txt_io.h"
+	"txt_main.h"
+	"txt_separator.h"
+	"txt_strut.h"
+	"txt_table.h"
+
+1466336871 source:/data/aravindh/researchdoom/textscreen/txt_utf8.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"txt_utf8.h"
+
+1466336871 source:/data/aravindh/researchdoom/textscreen/txt_widget.c
+	<stdlib.h>
+	<string.h>
+	"txt_io.h"
+	"txt_widget.h"
+	"txt_gui.h"
+	"txt_desktop.h"
+
+1466336871 source:/data/aravindh/researchdoom/textscreen/txt_window.c
+	<stdio.h>
+	<stdlib.h>
+	<stdarg.h>
+	<string.h>
+	"doomkeys.h"
+	"txt_label.h"
+	"txt_desktop.h"
+	"txt_gui.h"
+	"txt_io.h"
+	"txt_main.h"
+	"txt_separator.h"
+	"txt_window.h"
+	<windows.h>
+	<shellapi.h>
+
+1466336871 source:/data/aravindh/researchdoom/textscreen/txt_window_action.c
+	<stdlib.h>
+	<string.h>
+	<ctype.h>
+	"doomkeys.h"
+	"txt_window_action.h"
+	"txt_gui.h"
+	"txt_io.h"
+	"txt_main.h"
+	"txt_window.h"
+
