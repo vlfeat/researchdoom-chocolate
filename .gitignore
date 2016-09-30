@@ -6,7 +6,6 @@ TAGS
 aclocal.m4
 autom4te.cache
 autotools
-bin
 config.h
 config.hin
 config.log
