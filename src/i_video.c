@@ -49,6 +49,11 @@
 #include "w_wad.h"
 #include "z_zone.h"
 
+#include "research.h"
+#include "d_loop.h"
+#include "doomstat.h"
+
+
 // Lookup table for mapping ASCII characters to their equivalent when
 // shift is pressed on an American layout keyboard:
 
@@ -962,6 +967,13 @@ void I_FinishUpdate (void)
 
     BlitArea(0, 0, SCREENWIDTH, SCREENHEIGHT);
 
+    if (gamestate == GS_LEVEL) {
+        // record ony in-game frames
+        rdmRecordRGB(gametic, I_VideoBuffer, &palette->r) ;
+        rdmRecordDepth(gametic) ;
+        rdmRecordObjects(gametic) ;
+    }
+
     if (palette_to_set)
     {
         SDL_SetColors(screenbuffer, palette, 0, 256);
@@ -1016,8 +1028,8 @@ void I_SetPalette (byte *doompalette)
 
     for (i=0; i<256; ++i)
     {
-        // Zero out the bottom two bits of each channel - the PC VGA
-        // controller only supports 6 bits of accuracy.
+                // Zero out the bottom two bits of each channel - the PC VGA
+                // controller only supports 6 bits of accuracy.
 
         palette[i].r = gammatable[usegamma][*doompalette++] & ~3;
         palette[i].g = gammatable[usegamma][*doompalette++] & ~3;

@@ -76,6 +76,8 @@
 
 #include "d_main.h"
 
+#include "research.h"
+
 //
 // D-DoomLoop()
 // Not a globally visible function,
@@ -439,6 +441,9 @@ void D_DoomLoop (void)
                " may cause demos and network games to get out of sync.\n");
     }
 
+    // ResaerchDoom: start recording
+    rdmStartRecording(SCREENWIDTH, SCREENHEIGHT) ;
+
     if (demorecording)
 	G_BeginRecording ();
 
@@ -472,8 +477,9 @@ void D_DoomLoop (void)
 	S_UpdateSounds (players[consoleplayer].mo);// move positional sounds
 
 	// Update display, next frame, with current state.
-        if (screenvisible)
+        if (screenvisible || singletics) {
             D_Display ();
+        }
     }
 }
 
@@ -1124,6 +1130,8 @@ static void D_Endoom(void)
     // Don't show ENDOOM if we have it disabled, or we're running
     // in screensaver or control test mode. Only show it once the
     // game has actually started.
+
+    rdmFinish() ;
 
     if (!show_endoom || !main_loop_started
      || screensaver_mode || M_CheckParm("-testcontrols") > 0)
@@ -1859,6 +1867,53 @@ void D_DoomMain (void)
     {
         I_AtExit(StatDump, true);
         DEH_printf("External statistics registered.\n");
+    }
+
+    // ResearchDoom
+
+    p = M_CheckParmWithArgs("-rdm-outdir", 1);
+
+    if (p)
+    {
+        DEH_printf("ResearchDoom: recording to '%s'\n", myargv[p+1]) ;
+        rdmSetBaseName(myargv[p+1]) ;
+    }
+
+    if (M_CheckParm("-rdm-log"))
+    {
+        DEH_printf("ResearchDoom: recording log (-rdm-log).\n") ;
+        rdmSetFlag(kRecordingModeMaskRGB | kRecordingModeMaskLog) ;
+    }
+
+    if (M_CheckParm("-rdm-rgb"))
+    {
+        DEH_printf("ResearchDoom: recording RGB (-rdm-rgb).\n") ;
+        rdmSetFlag(kRecordingModeMaskRGB | kRecordingModeMaskLog) ;
+    }
+
+    if (M_CheckParm("-rdm-depth"))
+    {
+        DEH_printf("ResearchDoom: recording depth (-rdm-depth).\n") ;
+        rdmSetFlag(kRecordingModeMaskDepth | kRecordingModeMaskLog) ;
+    }
+
+    if (M_CheckParm("-rdm-objects"))
+    {
+        DEH_printf("ResearchDoom: recording objects (-rdm-depth).\n") ;
+        rdmSetFlag(kRecordingModeMaskObjects | kRecordingModeMaskLog) ;
+    }
+
+    if (M_CheckParm("-rdm-hideplayer"))
+    {
+        DEH_printf("ResearchDoom: hiding player (-rdm-hideplayer).\n") ;
+        rdmHidePlayer = true ;
+    }
+
+    if (M_CheckParm("-rdm-syncframes"))
+    {
+        DEH_printf("ResearchDoom: sync frames with single tics (-rdm-syncframes).\n") ;
+        rdmSyncFrames = true;
+        singletics = true;
     }
 
     //!

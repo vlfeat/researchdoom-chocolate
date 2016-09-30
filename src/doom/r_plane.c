@@ -32,6 +32,7 @@
 #include "r_local.h"
 #include "r_sky.h"
 
+#include "research.h"
 
 
 planefunction_t		floorfunc;
@@ -144,7 +145,7 @@ R_MapPlane
 	ds_xstep = cachedxstep[y];
 	ds_ystep = cachedystep[y];
     }
-	
+
     length = FixedMul (distance,distscale[x1]);
     angle = (viewangle + xtoviewangle[x1])>>ANGLETOFINESHIFT;
     ds_xfrac = viewx + FixedMul(finecosine[angle], length);
@@ -165,6 +166,9 @@ R_MapPlane
     ds_y = y;
     ds_x1 = x1;
     ds_x2 = x2;
+
+    // ResearchDoom: distance means depth here
+    ds_depth = distance ;
 
     // high or low detail
     spanfunc ();	
@@ -407,6 +411,8 @@ void R_DrawPlanes (void)
 		    angle = (viewangle + xtoviewangle[x])>>ANGLETOSKYSHIFT;
 		    dc_x = x;
 		    dc_source = R_GetColumn(skytexture, angle);
+                    dc_depth = 0x7fffffff ;
+                    dc_objectid = kObjectIdSky ;
 		    colfunc ();
 		}
 	    }

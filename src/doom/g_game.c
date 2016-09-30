@@ -72,6 +72,7 @@
 
 #include "g_game.h"
 
+#include "research.h"
 
 #define SAVEGAMESIZE	0x2c000
 
@@ -1483,7 +1484,18 @@ void G_DoCompleted (void)
     automapactive = false; 
 
     StatCopy(&wminfo);
- 
+
+    // ReserachDoom: this is probably where all old objects are freed up; make a note in the log file; however this is done only at the beginning of a level; so it does not catch the object removed when the last level ends...
+    if (1) {
+        for (i = 0 ; i < numsectors ; ++i) {
+            mobj_t const * thing = sectors[i].thinglist ;
+            while (thing) {
+                rdmRecordLog(gametic, "remove:%05d", thing->instanceid) ;
+                thing = thing->snext ;
+            }
+        }
+    }
+
     WI_Start (&wminfo); 
 } 
 

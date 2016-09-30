@@ -36,6 +36,7 @@
 // State.
 #include "doomstat.h"
 
+#include "research.h"
 
 // ?
 #define MAXWIDTH			1120
@@ -86,6 +87,10 @@ int			dc_yh;
 fixed_t			dc_iscale; 
 fixed_t			dc_texturemid;
 
+// ResearchDoom: column depth and object id
+fixed_t                 dc_depth;
+int unsigned            dc_objectid ;
+
 // first pixel in a column (possibly virtual) 
 byte*			dc_source;		
 
@@ -104,8 +109,9 @@ void R_DrawColumn (void)
     int			count; 
     byte*		dest; 
     fixed_t		frac;
-    fixed_t		fracstep;	 
- 
+    fixed_t		fracstep;
+    int                 depth;
+
     count = dc_yh - dc_yl; 
 
     // Zero length, column does not exceed a pixel.
@@ -127,7 +133,12 @@ void R_DrawColumn (void)
     // Determine scaling,
     //  which is the only mapping to be done.
     fracstep = dc_iscale; 
-    frac = dc_texturemid + (dc_yl-centery)*fracstep; 
+    frac = dc_texturemid + (dc_yl-centery)*fracstep;
+
+    // ResearchDoom. Store column depth instead of texture.
+    // This code does walls and sprites.
+    depth = dc_depth >> 10 ;
+    if (depth > 0xffff) { depth = 0xffff ; }
 
     // Inner loop that does the actual texture mapping,
     //  e.g. a DDA-lile scaling.
@@ -136,8 +147,17 @@ void R_DrawColumn (void)
     {
 	// Re-map color indices from wall texture column
 	//  using a lighting/special effects LUT.
-	*dest = dc_colormap[dc_source[(frac>>FRACBITS)&127]];
-	
+        *dest = dc_colormap[dc_source[(frac>>FRACBITS)&127]];
+
+        if (rdmIsRecording) {
+            if (rdmRecordingMode & kRecordingModeMaskDepth) {          
+                *(rdmDepthMapBuffer + (dest - I_VideoBuffer)) = (uint16_t)depth;
+            }
+            if (rdmRecordingMode & kRecordingModeMaskObjects) {
+                *(rdmObjectMapBuffer + (dest - I_VideoBuffer)) = dc_objectid ;
+            }
+        }
+
 	dest += SCREENWIDTH; 
 	frac += fracstep;
 	
@@ -285,7 +305,8 @@ void R_DrawFuzzColumn (void)
     int			count; 
     byte*		dest; 
     fixed_t		frac;
-    fixed_t		fracstep;	 
+    fixed_t		fracstep;
+    int                 depth ;
 
     // Adjust borders. Low... 
     if (!dc_yl) 
@@ -316,16 +337,30 @@ void R_DrawFuzzColumn (void)
     fracstep = dc_iscale; 
     frac = dc_texturemid + (dc_yl-centery)*fracstep; 
 
+    // ResearchDoom. Store column depth instead of texture.
+    // This code does walls and sprites.
+    depth = dc_depth >> 10 ;
+    if (depth > 0xffff) { depth = 0xffff ; }
+
     // Looks like an attempt at dithering,
     //  using the colormap #6 (of 0-31, a bit
     //  brighter than average).
     do 
     {
-	// Lookup framebuffer, and retrieve
-	//  a pixel that is either one column
-	//  left or right of the current one.
-	// Add index from colormap to index.
-	*dest = colormaps[6*256+dest[fuzzoffset[fuzzpos]]]; 
+        // Lookup framebuffer, and retrieve
+        //  a pixel that is either one column
+        //  left or right of the current one.
+        // Add index from colormap to index.
+        *dest = colormaps[6*256+dest[fuzzoffset[fuzzpos]]];
+
+        if (rdmIsRecording) {
+            if (rdmRecordingMode & kRecordingModeMaskDepth) {
+                *(rdmDepthMapBuffer + (dest - I_VideoBuffer)) = (uint16_t)depth ;
+            }
+            if (rdmRecordingMode & kRecordingModeMaskObjects) {
+                *(rdmObjectMapBuffer + (dest - I_VideoBuffer)) = kObjectIdHorizontal ;
+            }
+        }
 
 	// Clamp table lookup index.
 	if (++fuzzpos == FUZZTABLE) 
@@ -578,6 +613,9 @@ fixed_t			ds_yfrac;
 fixed_t			ds_xstep; 
 fixed_t			ds_ystep;
 
+// ResearchDoom horizontal span depth
+fixed_t                 ds_depth;
+
 // start of a 64*64 tile image 
 byte*			ds_source;	
 
@@ -593,6 +631,7 @@ void R_DrawSpan (void)
     byte *dest;
     int count;
     int spot;
+    int depth;
     unsigned int xtemp, ytemp;
 
 #ifdef RANGECHECK
@@ -619,6 +658,10 @@ void R_DrawSpan (void)
 
     dest = ylookup[ds_y] + columnofs[ds_x1];
 
+    // ResearchDoom. This does horizontal spans (foors/ceilings)
+    depth = ds_depth >> 10 ;
+    if (depth > 0xffff) { depth = 0xffff ;}
+
     // We do not check for zero spans here?
     count = ds_x2 - ds_x1;
 
@@ -629,9 +672,18 @@ void R_DrawSpan (void)
         xtemp = (position >> 26);
         spot = xtemp | ytemp;
 
-	// Lookup pixel from flat texture tile,
-	//  re-index using light/colormap.
-	*dest++ = ds_colormap[ds_source[spot]];
+        // Lookup pixel from flat texture tile,
+        //  re-index using light/colormap.
+        *dest++ = ds_colormap[ds_source[spot]];
+
+        if (rdmIsRecording) {
+            if (rdmRecordingMode & kRecordingModeMaskDepth) {
+                *(rdmDepthMapBuffer + (dest - 1 - I_VideoBuffer)) = (uint16_t)depth ;
+            }
+            if (rdmRecordingMode & kRecordingModeMaskObjects) {
+                *(rdmObjectMapBuffer + (dest - 1 - I_VideoBuffer)) = kObjectIdHorizontal ;
+            }
+        }        
 
         position += step;
 
@@ -714,7 +766,7 @@ void R_DrawSpan (void)
 
 
 //
-// Again..
+// Again.. This is the "blocky" mode (low = low resolution)
 //
 void R_DrawSpanLow (void)
 {

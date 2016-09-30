@@ -32,6 +32,8 @@
 #include "r_local.h"
 #include "r_sky.h"
 
+#include "research.h"
+
 
 // OPTIMIZE: closed two sided lines as single sided
 
@@ -154,6 +156,18 @@ R_RenderMaskedSegRange
     // draw the columns
     for (dc_x = x1 ; dc_x <= x2 ; dc_x++)
     {
+        // ResearchDoom: rw_distance is unfortunately not correct for the whole
+        // wall, but for the closest point to the player. It needs to
+        // be suitably scaled after each column is considered
+        {
+            int angle = (viewangle - ds->angle + xtoviewangle[dc_x])>>ANGLETOFINESHIFT;
+            // distance to the point
+            dc_depth = FixedDiv (ds->distance, finecosine[angle]) ;
+            // project along Z direction (we want depth, not distance)
+            dc_depth = FixedMul (dc_depth, finecosine[xtoviewangle[dc_x]>>ANGLETOFINESHIFT]) ;
+            dc_objectid = kObjectIdVertical ;
+        }
+
 	// calculate lighting
 	if (maskedtexturecol[dc_x] != SHRT_MAX)
 	{
@@ -173,7 +187,7 @@ R_RenderMaskedSegRange
 	    // draw the texture
 	    col = (column_t *)( 
 		(byte *)R_GetColumn(texnum,maskedtexturecol[dc_x]) -3);
-			
+
 	    R_DrawMaskedColumn (col);
 	    maskedtexturecol[dc_x] = SHRT_MAX;
 	}
@@ -248,7 +262,19 @@ void R_RenderSegLoop (void)
 		floorplane->bottom[rw_x] = bottom;
 	    }
 	}
-	
+
+        // ResearchDoom: rw_distance gives the distance of the player
+        // to the wall. We transform that in the depth of the current
+        // wall point.
+        {
+            angle = (viewangle - rw_normalangle + xtoviewangle[rw_x])>>ANGLETOFINESHIFT;
+            // distance to the point
+            dc_depth = FixedDiv (rw_distance, finecosine[angle]) ;
+            // project along Z direction (we want depth, not distance)
+            dc_depth = FixedMul (dc_depth, finecosine[xtoviewangle[rw_x]>>ANGLETOFINESHIFT]) ;
+            dc_objectid = kObjectIdVertical ;
+        }
+        
 	// texturecolumn and lighting are independent of wall tiers
 	if (segtextured)
 	{
@@ -272,7 +298,7 @@ void R_RenderSegLoop (void)
 
             texturecolumn = 0;
         }
-	
+
 	// draw the wall tiers
 	if (midtexture)
 	{
@@ -393,7 +419,7 @@ R_StoreWallRange
 
     // mark the segment as visible for auto map
     linedef->flags |= ML_MAPPED;
-    
+
     // calculate rw_distance for scale calculation
     rw_normalangle = curline->angle + ANG90;
     offsetangle = abs(rw_normalangle-rw_angle1);
@@ -410,10 +436,12 @@ R_StoreWallRange
     ds_p->x1 = rw_x = start;
     ds_p->x2 = stop;
     ds_p->curline = curline;
+    ds_p->distance = rw_distance;
+    ds_p->angle = rw_normalangle;
     rw_stopx = stop+1;
     
     // calculate scale at both ends and step
-    ds_p->scale1 = rw_scale = 
+    ds_p->scale1 = rw_scale =
 	R_ScaleFromGlobalAngle (viewangle + xtoviewangle[start]);
     
     if (stop > start )

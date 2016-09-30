@@ -40,6 +40,8 @@
 
 #include "doomstat.h"
 
+#include "research.h"
+
 
 void	P_SpawnMapThing (mapthing_t*	mthing);
 
@@ -848,6 +850,7 @@ P_SetupLevel
 
     //printf ("free memory: 0x%x\n", Z_FreeMemory());
 
+    rdmRecordLog(gametic, "level loaded: %s", lumpname) ;
 }
 
 

@@ -35,6 +35,7 @@
 
 #include "doomstat.h"
 
+#include "research.h"
 
 
 #define MINZ				(FRACUNIT*4)
@@ -418,7 +419,11 @@ R_DrawVisSprite
     frac = vis->startfrac;
     spryscale = vis->scale;
     sprtopscreen = centeryfrac - FixedMul(dc_texturemid,spryscale);
-	
+
+    // ResearchDoom: pass depth of the sprite
+    dc_depth = vis->depth ;
+    dc_objectid = vis->mobjinstanceid % kObjectIdSky ;
+
     for (dc_x=vis->x1 ; dc_x<=vis->x2 ; dc_x++, frac += vis->xiscale)
     {
 	texturecolumn = frac>>FRACBITS;
@@ -428,7 +433,7 @@ R_DrawVisSprite
 #endif
 	column = (column_t *) ((byte *)patch +
 			       LONG(patch->columnofs[texturecolumn]));
-	R_DrawMaskedColumn (column);
+        R_DrawMaskedColumn (column);
     }
 
     colfunc = basecolfunc;
@@ -548,7 +553,10 @@ void R_ProjectSprite (mobj_t* thing)
     vis->gzt = thing->z + spritetopoffset[lump];
     vis->texturemid = vis->gzt - viewz;
     vis->x1 = x1 < 0 ? 0 : x1;
-    vis->x2 = x2 >= viewwidth ? viewwidth-1 : x2;	
+    vis->x2 = x2 >= viewwidth ? viewwidth-1 : x2;
+    vis->depth = tz ;
+    vis->mobjinstanceid = thing->instanceid ;
+
     iscale = FixedDiv (FRACUNIT, xscale);
 
     if (flip)
@@ -727,7 +735,10 @@ void R_DrawPSprite (pspdef_t* psp)
 	vis->colormap = spritelights[MAXLIGHTSCALE-1];
     }
 	
-    R_DrawVisSprite (vis, vis->x1, vis->x2);
+    if (!rdmHidePlayer) {
+        vis->depth = 0 ; // weapon is right in front
+        R_DrawVisSprite (vis, vis->x1, vis->x2);
+    }
 }
 
 

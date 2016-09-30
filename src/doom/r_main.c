@@ -35,6 +35,8 @@
 #include "r_local.h"
 #include "r_sky.h"
 
+#include "research.h"
+#include "m_fixed.h"
 
 
 
@@ -821,9 +823,9 @@ R_PointInSubsector
 // R_SetupFrame
 //
 void R_SetupFrame (player_t* player)
-{		
+{
     int		i;
-    
+
     viewplayer = player;
     viewx = player->mo->x;
     viewy = player->mo->y;
@@ -834,6 +836,12 @@ void R_SetupFrame (player_t* player)
     
     viewsin = finesine[viewangle>>ANGLETOFINESHIFT];
     viewcos = finecosine[viewangle>>ANGLETOFINESHIFT];
+
+    rdmRecordLog(gametic, "player:%g,%g,%g,%g",
+                 (double)viewx / FRACUNIT,
+                 (double)viewy / FRACUNIT,
+                 (double)viewz / FRACUNIT,
+                 (double)viewangle / ANG180 * 3.14159265358979323846) ;
 	
     sscount = 0;
 	
@@ -861,7 +869,7 @@ void R_SetupFrame (player_t* player)
 // R_RenderView
 //
 void R_RenderPlayerView (player_t* player)
-{	
+{
     R_SetupFrame (player);
 
     // Clear buffers.

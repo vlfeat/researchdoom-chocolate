@@ -22,6 +22,8 @@
 
 #include "SDL.h"
 
+#include "research.h"
+
 #include "doomtype.h"
 #include "i_system.h"
 #include "m_argv.h"
@@ -43,10 +45,13 @@ int main(int argc, char **argv)
 
     M_FindResponseFile();
 
+    rdmInit() ;
+
     // start doom
 
     D_DoomMain ();
 
+    rdmFinish() ;
     return 0;
 }
 

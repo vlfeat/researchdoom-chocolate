@@ -22,7 +22,7 @@
 
 #include "doomdef.h"
 
-
+#include "research.h"
 
 
 // Read events from all input devices

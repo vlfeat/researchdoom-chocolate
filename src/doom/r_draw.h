@@ -29,6 +29,8 @@ extern int		dc_yl;
 extern int		dc_yh;
 extern fixed_t		dc_iscale;
 extern fixed_t		dc_texturemid;
+extern fixed_t          dc_depth ;
+extern int unsigned     dc_objectid ;
 
 // first pixel in a column
 extern byte*		dc_source;		
@@ -65,6 +67,7 @@ extern fixed_t		ds_xfrac;
 extern fixed_t		ds_yfrac;
 extern fixed_t		ds_xstep;
 extern fixed_t		ds_ystep;
+extern fixed_t          ds_depth;
 
 // start of a 64*64 tile image
 extern byte*		ds_source;		

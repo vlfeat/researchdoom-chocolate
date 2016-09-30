@@ -276,7 +276,9 @@ typedef struct mobj_s
 
     // Thing being chased/attacked for tracers.
     struct mobj_s*	tracer;	
-    
+
+    // ResearchDoom: enumerate all mobile objects.
+    int unsigned        instanceid;
 } mobj_t;
 
 

@@ -33,6 +33,8 @@
 
 #include "doomstat.h"
 
+#include "research.h"
+
 
 void G_PlayerReborn (int player);
 void P_SpawnMapThing (mapthing_t*	mthing);
@@ -510,6 +512,8 @@ void P_MobjThinker (mobj_t* mobj)
 
 }
 
+// ResearchDoom: enumerate all objects created
+int unsigned mobjlastid = 0 ;
 
 //
 // P_SpawnMobj
@@ -550,6 +554,7 @@ P_SpawnMobj
     mobj->tics = st->tics;
     mobj->sprite = st->sprite;
     mobj->frame = st->frame;
+    mobj->instanceid = ++mobjlastid ;
 
     // set subsector and/or block links
     P_SetThingPosition (mobj);
@@ -568,6 +573,7 @@ P_SpawnMobj
 	
     P_AddThinker (&mobj->thinker);
 
+    rdmRecordLog(gametic, "spawn:%05d type:%03d [%s]", mobj->instanceid, mobj->type, researchObjectTypeNames[mobj->type]) ;
     return mobj;
 }
 
@@ -583,6 +589,8 @@ int		iquetail;
 
 void P_RemoveMobj (mobj_t* mobj)
 {
+    rdmRecordLog(gametic, "remove:%05d", mobj->instanceid) ;
+
     if ((mobj->flags & MF_SPECIAL)
 	&& !(mobj->flags & MF_DROPPED)
 	&& (mobj->type != MT_INV)
