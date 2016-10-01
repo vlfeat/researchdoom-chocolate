@@ -938,13 +938,6 @@ void I_FinishUpdate (void)
 
     UpdateGrab();
 
-    // Don't update the screen if the window isn't visible.
-    // Not doing this breaks under Windows when we alt-tab away 
-    // while fullscreen.
-
-    if (!(SDL_GetAppState() & SDL_APPACTIVE))
-        return;
-
     // draws little dots on the bottom of the screen
 
     if (display_fps_dots)
@@ -1002,6 +995,13 @@ void I_FinishUpdate (void)
 
         SDL_BlitSurface(screenbuffer, NULL, screen, &dst_rect);
     }
+
+    // Don't update the screen if the window isn't visible.
+    // Not doing this breaks under Windows when we alt-tab away
+    // while fullscreen.
+
+    if (!(SDL_GetAppState() & SDL_APPACTIVE))
+        return;
 
     SDL_Flip(screen);
 

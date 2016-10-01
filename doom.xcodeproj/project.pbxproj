@@ -179,8 +179,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		2D0292071D9FCF6B002727B6 /* rdm-extra.cfg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "rdm-extra.cfg"; path = "etc/rdm-extra.cfg"; sourceTree = "<group>"; };
 		2D1C1C2C1CF5F66F002A321A /* research.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = research.h; path = src/research.h; sourceTree = "<group>"; };
-		2D1C1C301CF65F96002A321A /* rdm.cfg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = rdm.cfg; path = bin/rdm.cfg; sourceTree = "<group>"; };
+		2D1C1C301CF65F96002A321A /* rdm.cfg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = rdm.cfg; path = etc/rdm.cfg; sourceTree = "<group>"; };
 		2D1C1C321CF83C49002A321A /* research.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = research.c; path = src/research.c; sourceTree = "<group>"; };
 		2D3A4B271CF2EA450004A34B /* am_map.c */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.c; name = am_map.c; path = src/doom/am_map.c; sourceTree = "<group>"; tabWidth = 8; };
 		2D3A4B281CF2EA450004A34B /* am_map.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.h; name = am_map.h; path = src/doom/am_map.h; sourceTree = "<group>"; tabWidth = 8; };
@@ -753,6 +754,7 @@
 				2D55BB241CF312670079AEEC /* Cocoa.framework */,
 				2D55BAAF1CF30C4A0079AEEC /* config.h */,
 				2D1C1C301CF65F96002A321A /* rdm.cfg */,
+				2D0292071D9FCF6B002727B6 /* rdm-extra.cfg */,
 				2DDD7C9A1CF2E525005EF7CB /* src */,
 				2D6AE5CB1CF2E2510050DD14 /* Products */,
 			);

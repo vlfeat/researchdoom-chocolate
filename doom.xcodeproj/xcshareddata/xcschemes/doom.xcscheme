@@ -67,15 +67,15 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "-playdemo $(SRCROOT)/demos/ep1-507.LMP"
+            argument = "-playdemo $(SRCROOT)/lmps/30uvmax3.lmp"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "-config $(SRCROOT)/bin/default.cfg"
+            argument = "-config $(SRCROOT)/etc/rdm.cfg"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "-extraconfig $(SRCROOT)/bin/chocolate-doom.cfg"
+            argument = "-extraconfig $(SRCROOT)/etc/rdm-extra.cfg"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
