@@ -1,16 +1,26 @@
 # ResearchDoom
 
-This is a fork of [ChocolateDoom](#chocolate) that can record the Doom game frames as well as depth map and object map information during gameplay. To use it, compile to create the executable `./bin/doom`. The executable `./bin/doom` can be called directly or through the `./bin/rdm-record.sh` script.
+This is a fork of [ChocolateDoom](#chocolate) that can record the Doom
+game frames as well as depth map and object map information during
+gameplay. To use it, compile to create the executable
+`./bin/doom`. The executable `./bin/doom` can be called directly or
+through the `./bin/rdm-record.sh` script.
 
 ## Installation
 
-Currently, the easier approach is to use the Codeblocks project `./codeblocks` in Linux or the Xcode project `./doom.xcodeproj` on macOS. 
+Currently, the easier approach is to use the Codeblocks project
+`./codeblocks` in Linux or the Xcode project `./doom.xcodeproj` on
+macOS.
 
-You will need to install SDL-1.2 and extra tools associated with it. For example, on a Mac you can use [Homebrew](http://brew.sh/index.html) and:
+You will need to install SDL-1.2 and extra tools associated with
+it. For example, on a Mac you can use
+[Homebrew](http://brew.sh/index.html) and:
 
     brew install sdl sdl_mixer sdl_net libsamplerate
 
-Do not forget to change the Xcode build setting `RDM_THIRD_PARTY` to point to your Homebrew installation prefix (usually `/usr/local`). You can then either use Xcode GUIs, or simply the command line:
+Do not forget to change the Xcode build setting `RDM_THIRD_PARTY` to
+point to your Homebrew installation prefix (usually `/usr/local`). You
+can then either use Xcode GUIs, or simply the command line:
 
     xcodebuild -scheme doom RDM_THIRD_PARTY=/usr/local/
 
@@ -120,6 +130,3 @@ chocolate-doom -merge aoddoom1.wad -deh aoddoom1.deh  (Army of Darkness Doom)
 
  * Please send any feedback, questions or suggestions to
    fraggle@gmail.com. Thanks!
-
-
-
