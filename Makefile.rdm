@@ -165,5 +165,5 @@ textscreen/txt_widget.c \
 textscreen/txt_window.c \
 textscreen/txt_window_action.c
 
-bin/doom:
+bin/doom: $(src)
 	gcc $(CFLAGS) $(LDFLAGS) $(src) -o "$@"
