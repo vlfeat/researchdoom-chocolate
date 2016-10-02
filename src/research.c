@@ -22,7 +22,7 @@
 bool rdmIsRecording = false ;
 rdmRecordingModeMask rdmRecordingMode = 0 ;
 uint16_t * rdmDepthMapBuffer = NULL ;
-uint16_t * rdmObjectMapBuffer = NULL ;
+uint8_t * rdmObjectMapBuffer = NULL ;
 bool rdmHidePlayer = false ;
 bool rdmSyncFrames = false ;
 
@@ -306,6 +306,69 @@ void savePNG16(const char * fileName, uint16_t const * pixels, size_t width, siz
   return ;
 }
 
+void savePNG24(const char * fileName, uint8_t const * pixels, size_t width, size_t height)
+{
+  png_structp png_ptr;
+  png_infop info_ptr;
+  png_colorp pal_ptr;
+  FILE *file ;
+
+  // Open file for writing (binary mode)
+  file = fopen(fileName, "wb");
+  if (file == NULL) {
+    return ;
+  }
+
+  // Initialize write structure
+  png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL); /* err_ptr, err_fn, warn_fn */
+  if (!png_ptr)
+  {
+    fclose(file) ;
+    return ;
+  }
+
+  // Initialize info structure
+  info_ptr = png_create_info_struct(png_ptr);
+  if (!info_ptr)
+  {
+    png_destroy_write_struct(&png_ptr, NULL);
+    fclose(file) ;
+    return ;
+  }
+
+  // Setup Exception handling
+  if (setjmp(png_jmpbuf(png_ptr)))	/* catch errors */
+  {
+    png_destroy_write_struct(&png_ptr, &info_ptr);
+    fclose(file) ;
+    return ;
+  }
+
+  /* Setup file io */
+  png_init_io(png_ptr, file);
+
+  /* */
+  png_set_IHDR(png_ptr, info_ptr, width, height, 8,
+               PNG_COLOR_TYPE_RGB,
+               PNG_INTERLACE_NONE,
+               PNG_COMPRESSION_TYPE_DEFAULT,
+               PNG_FILTER_TYPE_DEFAULT);
+
+  /* Write everything */
+  png_write_info(png_ptr, info_ptr);
+  png_set_swap(png_ptr) ;
+  for (size_t i = 0; i < height; i++) {
+    png_write_row(png_ptr, (png_bytep)(pixels + i * width * 3));
+  }
+  png_write_end(png_ptr, info_ptr);
+
+  /* Done */
+  png_destroy_write_struct(&png_ptr, &info_ptr);
+  fclose(file) ;
+  return ;
+}
+
+
 // -------------------------------------------------------------------
 
 
@@ -371,7 +434,7 @@ void rdmStartRecording(size_t width, size_t height)
 
   if (rdmRecordingMode & kRecordingModeMaskObjects) {
     snprintf(str, sizeof(str), "%s/objects", rdmBaseName) ;
-    rdmObjectMapBuffer = calloc(width*height,sizeof(*rdmObjectMapBuffer)) ;
+    rdmObjectMapBuffer = calloc(width*height*3,sizeof(*rdmObjectMapBuffer)) ;
     rdmMakeDir(str) ;
   }
 
@@ -444,7 +507,7 @@ void rdmRecordObjects(size_t tic)
   if (rdmIsRecording && (rdmRecordingMode & kRecordingModeMaskObjects)) {
     char str [1024] ;
     snprintf(str, sizeof(str), "%s/objects/%06zu.png", rdmBaseName, tic) ;
-    savePNG16(str, rdmObjectMapBuffer, rdmFrameWidth, rdmFrameHeight) ;
+    savePNG24(str, rdmObjectMapBuffer, rdmFrameWidth, rdmFrameHeight) ;
     rdmLastRecordedTic = tic ;
   }
 }

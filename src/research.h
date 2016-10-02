@@ -21,9 +21,10 @@ typedef enum {
 
 typedef enum
 {
-  kObjectIdSky = 0 + (1 << 14),
-  kObjectIdHorizontal = 1 + (1 << 14),
-  kObjectIdVertical = 2 + (1 << 14)
+  kObjectMask = (1 << 23) - 1,
+  kObjectIdSky = 0 + (1 << 23),
+  kObjectIdHorizontal = 1 + (1 << 23),
+  kObjectIdVertical = 2 + (1 << 23)
 } rdmObjectId ;
 
 extern char const* researchObjectTypeNames [] ;
@@ -32,8 +33,7 @@ extern bool rdmHidePlayer ;
 extern bool rdmSyncFrames ;
 extern rdmRecordingModeMask rdmRecordingMode ;
 extern uint16_t * rdmDepthMapBuffer ;
-extern uint16_t * rdmObjectMapBuffer ;
-
+extern uint8_t * rdmObjectMapBuffer ;
 
 void rdmInit() ;
 void rdmFinish() ;

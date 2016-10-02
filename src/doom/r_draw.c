@@ -154,7 +154,10 @@ void R_DrawColumn (void)
                 *(rdmDepthMapBuffer + (dest - I_VideoBuffer)) = (uint16_t)depth;
             }
             if (rdmRecordingMode & kRecordingModeMaskObjects) {
-                *(rdmObjectMapBuffer + (dest - I_VideoBuffer)) = dc_objectid ;
+                int unsigned offset = 3*(dest - I_VideoBuffer) ;
+                rdmObjectMapBuffer[offset + 0] = (dc_objectid >> 0 ) & 0xff ;
+                rdmObjectMapBuffer[offset + 1] = (dc_objectid >> 8 ) & 0xff ;
+                rdmObjectMapBuffer[offset + 2] = (dc_objectid >> 16) & 0xff ;
             }
         }
 
@@ -658,7 +661,7 @@ void R_DrawSpan (void)
 
     dest = ylookup[ds_y] + columnofs[ds_x1];
 
-    // ResearchDoom. This does horizontal spans (foors/ceilings)
+    // ResearchDoom: This does horizontal spans (foors/ceilings)
     depth = ds_depth >> 10 ;
     if (depth > 0xffff) { depth = 0xffff ;}
 
@@ -681,7 +684,10 @@ void R_DrawSpan (void)
                 *(rdmDepthMapBuffer + (dest - 1 - I_VideoBuffer)) = (uint16_t)depth ;
             }
             if (rdmRecordingMode & kRecordingModeMaskObjects) {
-                *(rdmObjectMapBuffer + (dest - 1 - I_VideoBuffer)) = kObjectIdHorizontal ;
+                int unsigned offset = 3*(dest - 1 - I_VideoBuffer) ;
+                rdmObjectMapBuffer[offset + 0] = (kObjectIdHorizontal >> 0 ) & 0xff ;
+                rdmObjectMapBuffer[offset + 1] = (kObjectIdHorizontal >> 8 ) & 0xff ;
+                rdmObjectMapBuffer[offset + 2] = (kObjectIdHorizontal >> 16) & 0xff ;
             }
         }        
 

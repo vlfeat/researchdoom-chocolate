@@ -422,7 +422,7 @@ R_DrawVisSprite
 
     // ResearchDoom: pass depth of the sprite
     dc_depth = vis->depth ;
-    dc_objectid = vis->mobjinstanceid % kObjectIdSky ;
+    dc_objectid = vis->mobjinstanceid & kObjectMask ;
 
     for (dc_x=vis->x1 ; dc_x<=vis->x2 ; dc_x++, frac += vis->xiscale)
     {
