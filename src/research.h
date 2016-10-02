@@ -45,6 +45,7 @@ void rdmStartRecording(size_t width, size_t height) ;
 void rdmStopRecording() ;
 
 void rdmRecordLog(size_t tic, const char *fmt, ...) ;
+void rdmFlushLog() ;
 void rdmRecordRGB(size_t tic, uint8_t const * pixels, uint8_t const * palette) ;
 void rdmRecordDepth(size_t tic) ;
 void rdmRecordObjects(size_t tic) ;

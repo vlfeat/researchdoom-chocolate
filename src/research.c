@@ -411,6 +411,13 @@ void rdmRecordLog(size_t tic, char const * format, ...)
   }
 }
 
+void rdmFlushLog()
+{
+  if (rdmLogFile) {
+    fflush(rdmLogFile) ;
+  }
+}
+
 void rdmRecordRGB(size_t tic, uint8_t const * pixels,
                        uint8_t const * palette)
 {
