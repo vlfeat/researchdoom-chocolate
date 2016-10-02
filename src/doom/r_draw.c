@@ -361,7 +361,10 @@ void R_DrawFuzzColumn (void)
                 *(rdmDepthMapBuffer + (dest - I_VideoBuffer)) = (uint16_t)depth ;
             }
             if (rdmRecordingMode & kRecordingModeMaskObjects) {
-                *(rdmObjectMapBuffer + (dest - I_VideoBuffer)) = kObjectIdHorizontal ;
+                int unsigned offset = 3*(dest - I_VideoBuffer) ;
+                rdmObjectMapBuffer[offset + 0] = (kObjectIdHorizontal >> 0 ) & 0xff ;
+                rdmObjectMapBuffer[offset + 1] = (kObjectIdHorizontal >> 8 ) & 0xff ;
+                rdmObjectMapBuffer[offset + 2] = (kObjectIdHorizontal >> 16) & 0xff ;
             }
         }
 
