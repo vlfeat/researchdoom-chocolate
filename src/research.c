@@ -89,6 +89,7 @@ char const* researchObjectTypeNames [] = {
   "MISC10",
   "MISC11",
   "MISC12",
+  "INV",
   "MISC13",
   "INS",
   "MISC14",
