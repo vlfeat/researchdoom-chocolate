@@ -1,5 +1,11 @@
 # ResearchDoom
 
+The *ResearchDoom* projects aims at extracting data and ground truth
+annotations from the Doom game for the purpose of training and
+evaluating computer vision algorithms. For more information see the
+project
+[homepage](http://www.robots.ox.ac.uk/~vgg/research/researchdoom/).
+
 This is a fork of [ChocolateDoom](#chocolate) that can record the Doom
 game frames as well as depth map and object map information during
 gameplay. To use it, compile to create the executable
