@@ -528,7 +528,12 @@ extern int GetWeaponAmmo[NUMWEAPONS];
 
 extern boolean demorecording;
 extern boolean demoplayback;
+extern boolean demoextend;      // allow demos to persist through exit/respawn
 extern int skytexture;
+
+// Truncate angleturn in ticcmds to nearest 256.
+// Used when recording Vanilla demos in netgames.
+extern boolean lowres_turn;
 
 extern gamestate_t gamestate;
 extern skill_t gameskill;
@@ -563,6 +568,9 @@ extern boolean autostart;
 
 extern boolean testcontrols;
 extern int testcontrols_mousespeed;
+
+extern int vanilla_savegame_limit;
+extern int vanilla_demo_limit;
 
 /*
 ===============================================================================
