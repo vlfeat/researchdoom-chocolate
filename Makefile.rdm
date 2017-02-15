@@ -4,11 +4,18 @@
 
 CFLAGS=\
 -O3 \
--I/usr/include -I/usr/include/SDL \
--Isrc -Isrc/doom -Ipcsound -Iopl -Itextscreen \
+`pkg-config libpng --cflags` \
+`pkg-config samplerate --cflags` \
+`sdl-config --cflags` \
+-I. -Isrc -Isrc/doom -Ipcsound -Iopl -Itextscreen \
 -std=gnu99
 
-LDFLAGS=-I/usr/lib64 -lSDL_net -lSDL_mixer -lSDL -lsamplerate -lpng
+LDFLAGS=\
+-I/usr/lib64 \
+`pkg-config libpng --libs` \
+`pkg-config samplerate --libs` \
+`sdl-config --libs` -lSDL_net -lSDL_mixer \
+-lsamplerate -lpng -lm
 
 src=\
 opl/ioperm_sys.c \
@@ -166,4 +173,4 @@ textscreen/txt_window.c \
 textscreen/txt_window_action.c
 
 bin/doom: $(src)
-	gcc $(CFLAGS) $(LDFLAGS) $(src) -o "$@"
+	gcc -o "$@" $(src) $(CFLAGS) $(LDFLAGS)
