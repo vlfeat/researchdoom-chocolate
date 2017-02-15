@@ -1916,6 +1916,23 @@ void D_DoomMain (void)
         singletics = true;
     }
 
+
+    if (M_CheckParm("-rdm-hidemonsters"))
+    {
+        DEH_printf("ResearchDoom: hiding monsters (-rdm-hidemonsters).\n") ;
+        rdmHideMonsters = true ;
+    }
+
+    p = M_CheckParmWithArgs("-rdm-frameskip", 1);
+
+    if (p)
+    {
+        DEH_printf("ResearchDoom: setting frame skip to %s (-rdm-frameskip N).\n", myargv[p+1]) ;
+        rdmFrameSkip = atoi(myargv[p+1]) ;
+        if (rdmFrameSkip < 1) rdmFrameSkip = 1;
+    }
+
+
     //!
     // @arg <x>
     // @category demo

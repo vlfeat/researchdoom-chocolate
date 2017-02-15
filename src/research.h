@@ -30,10 +30,12 @@ typedef enum
 extern char const* researchObjectTypeNames [] ;
 extern bool rdmIsRecording ;
 extern bool rdmHidePlayer ;
+extern bool rdmHideMonsters ;
 extern bool rdmSyncFrames ;
 extern rdmRecordingModeMask rdmRecordingMode ;
 extern uint16_t * rdmDepthMapBuffer ;
 extern uint8_t * rdmObjectMapBuffer ;
+extern uint16_t rdmFrameSkip ;
 
 void rdmInit() ;
 void rdmFinish() ;

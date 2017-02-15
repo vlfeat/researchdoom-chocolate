@@ -476,6 +476,15 @@ void R_ProjectSprite (mobj_t* thing)
     angle_t		ang;
     fixed_t		iscale;
     
+
+    // rdm/researchdoom: hide monsters, most combat sprites and dropped ammo
+    if (rdmHideMonsters &&
+        (thing->type == MT_SKULL || thing->type == MT_BLOOD || thing->type == MT_PUFF ||
+        thing->flags & (MF_COUNTKILL | MF_SKULLFLY | MF_MISSILE | MF_DROPPED)))
+    {
+        return;
+    }
+
     // transform the origin point
     tr_x = thing->x - viewx;
     tr_y = thing->y - viewy;

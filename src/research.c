@@ -23,7 +23,9 @@ bool rdmIsRecording = false ;
 rdmRecordingModeMask rdmRecordingMode = 0 ;
 uint16_t * rdmDepthMapBuffer = NULL ;
 uint8_t * rdmObjectMapBuffer = NULL ;
+uint16_t rdmFrameSkip = 1 ;
 bool rdmHidePlayer = false ;
+bool rdmHideMonsters = false ;
 bool rdmSyncFrames = false ;
 
 char rdmBaseName [1024] ;
@@ -485,7 +487,8 @@ void rdmFlushLog()
 void rdmRecordRGB(size_t tic, uint8_t const * pixels,
                        uint8_t const * palette)
 {
-  if (rdmIsRecording && (rdmRecordingMode & kRecordingModeMaskRGB)) {
+  // check frame skip. use tic-2 because the first recorded image frame is always tic=2.
+  if (rdmIsRecording && (rdmRecordingMode & kRecordingModeMaskRGB) && (tic - 2) % rdmFrameSkip == 0) {
     char str [1024] ;
     snprintf(str, sizeof(str), "%s/rgb/%06zu.png", rdmBaseName, tic) ;
     savePNG(str, pixels, rdmFrameWidth, rdmFrameHeight, palette) ;
@@ -495,7 +498,7 @@ void rdmRecordRGB(size_t tic, uint8_t const * pixels,
 
 void rdmRecordDepth(size_t tic)
 {
-  if (rdmIsRecording && (rdmRecordingMode & kRecordingModeMaskDepth)) {
+  if (rdmIsRecording && (rdmRecordingMode & kRecordingModeMaskDepth) && (tic - 2) % rdmFrameSkip == 0) {
     char str [1024] ;
     snprintf(str, sizeof(str), "%s/depth/%06zu.png", rdmBaseName, tic) ;
     savePNG16(str, rdmDepthMapBuffer, rdmFrameWidth, rdmFrameHeight) ;
@@ -505,7 +508,7 @@ void rdmRecordDepth(size_t tic)
 
 void rdmRecordObjects(size_t tic)
 {
-  if (rdmIsRecording && (rdmRecordingMode & kRecordingModeMaskObjects)) {
+  if (rdmIsRecording && (rdmRecordingMode & kRecordingModeMaskObjects) && (tic - 2) % rdmFrameSkip == 0) {
     char str [1024] ;
     snprintf(str, sizeof(str), "%s/objects/%06zu.png", rdmBaseName, tic) ;
     savePNG24(str, rdmObjectMapBuffer, rdmFrameWidth, rdmFrameHeight) ;
