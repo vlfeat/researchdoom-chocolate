@@ -28,6 +28,9 @@
 
 #include "doomstat.h"
 
+// ResearchDoom.
+#include "research.h"
+
 
 
 // Index of the special effects (INVUL inverse) map.
@@ -351,7 +354,13 @@ void P_PlayerThink (player_t* player)
     if (player->bonuscount)
 	player->bonuscount--;
 
-    
+
+    // RDM: switch off palette changes
+    if (rdmHideMonsters) {
+    	player->fixedcolormap = 0;
+    	return;
+    }
+
     // Handling colormaps.
     if (player->powers[pw_invulnerability])
     {
