@@ -554,7 +554,8 @@ void R_InitTextureMapping (void)
     //  so FIELDOFVIEW angles covers SCREENWIDTH.
     focallength = FixedDiv (centerxfrac,
 			    finetangent[FINEANGLES/4+FIELDOFVIEW/2] );
-	
+
+    fixed_t tmp =  finetangent[FINEANGLES/4+FIELDOFVIEW/2] ;
     for (i=0 ; i<FINEANGLES/2 ; i++)
     {
 	if (finetangent[i] > FRACUNIT*2)
@@ -583,6 +584,7 @@ void R_InitTextureMapping (void)
 	while (viewangletox[i]>x)
 	    i++;
 	xtoviewangle[x] = (i<<ANGLETOFINESHIFT)-ANG90;
+        printf("%d\n",xtoviewangle[x]);
     }
     
     // Take out the fencepost cases from viewangletox.

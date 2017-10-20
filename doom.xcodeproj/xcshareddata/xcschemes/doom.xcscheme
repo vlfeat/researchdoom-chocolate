@@ -67,7 +67,7 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "-playdemo $(SRCROOT)/lmps/30uvmax3.lmp"
+            argument = "-playdemo $(SRCROOT)/lmps/ep1-507.LMP"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument

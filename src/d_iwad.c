@@ -459,13 +459,15 @@ static boolean DirIsFile(char *path, char *filename)
 static char *CheckDirectoryHasIWAD(char *dir, char *iwadname)
 {
     char *filename; 
+    char *probe;
 
     // As a special case, the "directory" may refer directly to an
     // IWAD file if the path comes from DOOMWADDIR or DOOMWADPATH.
 
-    if (DirIsFile(dir, iwadname) && M_FileExists(dir))
+    probe = M_FileCaseExists(dir);
+    if (DirIsFile(dir, iwadname) && probe != NULL)
     {
-        return M_StringDuplicate(dir);
+        return probe;
     }
 
     // Construct the full path to the IWAD if it is located in
@@ -480,9 +482,10 @@ static char *CheckDirectoryHasIWAD(char *dir, char *iwadname)
         filename = M_StringJoin(dir, DIR_SEPARATOR_S, iwadname, NULL);
     }
 
-    if (M_FileExists(filename))
+    probe = M_FileCaseExists(filename);
+    if (probe != NULL)
     {
-        return filename;
+        return probe;
     }
 
     free(filename);
@@ -592,6 +595,7 @@ static void AddIWADPath(char *path, char *suffix)
     free(path);
 }
 
+#ifndef _WIN32
 // Add standard directories where IWADs are located on Unix systems.
 // To respect the freedesktop.org specification we support overriding
 // using standard environment variables. See the XDG Base Directory
@@ -647,6 +651,7 @@ static void AddXdgDirs(void)
     // XDG_DATA_DIRS mechanism, through which it can be overridden.
     AddIWADPath(env, "/games/doom");
 }
+#endif
 
 //
 // Build a list of IWAD files
@@ -707,13 +712,15 @@ static void BuildIWADDirList(void)
 char *D_FindWADByName(char *name)
 {
     char *path;
+    char *probe;
     int i;
     
     // Absolute path?
 
-    if (M_FileExists(name))
+    probe = M_FileCaseExists(name);
+    if (probe != NULL)
     {
-        return name;
+        return probe;
     }
 
     BuildIWADDirList();
@@ -726,18 +733,20 @@ char *D_FindWADByName(char *name)
         // the "directory" may actually refer directly to an IWAD
         // file.
 
-        if (DirIsFile(iwad_dirs[i], name) && M_FileExists(iwad_dirs[i]))
+        probe = M_FileCaseExists(iwad_dirs[i]);
+        if (DirIsFile(iwad_dirs[i], name) && probe != NULL)
         {
-            return M_StringDuplicate(iwad_dirs[i]);
+            return probe;
         }
 
         // Construct a string for the full path
 
         path = M_StringJoin(iwad_dirs[i], DIR_SEPARATOR_S, name, NULL);
 
-        if (M_FileExists(path))
+        probe = M_FileCaseExists(path);
+        if (probe != NULL)
         {
-            return path;
+            return probe;
         }
 
         free(path);

@@ -1,6 +1,6 @@
 # yum install SDL_net SDL_net-devel
 # yum install samplerate samplerate-devel
-
+# brew install SDL_net SDL_mixer SDL
 
 CFLAGS=\
 -O3 \
@@ -15,7 +15,8 @@ LDFLAGS=\
 `pkg-config libpng --libs` \
 `pkg-config samplerate --libs` \
 `sdl-config --libs` -lSDL_net -lSDL_mixer \
--lsamplerate -lpng -lm
+-lm
+#-lsamplerate -lpng -lm
 
 src=\
 opl/ioperm_sys.c \
@@ -174,3 +175,7 @@ textscreen/txt_window_action.c
 
 bin/doom: $(src)
 	gcc -o "$@" $(src) $(CFLAGS) $(LDFLAGS)
+
+.PHONY: distclean
+distclean:
+	rm -f bin/doom
