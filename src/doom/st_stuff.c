@@ -58,6 +58,9 @@
 #include "dstrings.h"
 #include "sounds.h"
 
+// ResearchDoom.
+#include "research.h"
+
 //
 // STATUS BAR DATA
 //
@@ -1005,6 +1008,11 @@ void ST_doPaletteStuff(void)
      && palette >= STARTREDPALS && palette < STARTREDPALS + NUMREDPALS)
     {
         palette = RADIATIONPAL;
+    }
+
+    // RDM: switch of palette cycling
+    if (rdmHideMonsters) {
+        palette = 0 ;
     }
 
     if (palette != st_palette)

@@ -1226,7 +1226,7 @@ void D_DoomMain (void)
 {
     int p;
     char file[256];
-    char demolumpname[9];
+    char demolumpname[256];
     int numiwadlumps;
 
     I_AtExit(D_Endoom, false);
