@@ -11,6 +11,8 @@
 
 #include "stdint.h"
 #include "stdbool.h"
+#include "m_fixed.h"
+#include "tables.h"
 
 typedef enum {
   kRecordingModeMaskLog = 0x1,
@@ -29,6 +31,7 @@ typedef enum
 
 extern char const* researchObjectTypeNames [] ;
 extern bool rdmIsRecording ;
+extern bool rdmRecordThisFrame ;
 extern bool rdmHidePlayer ;
 extern bool rdmSyncFrames ;
 extern rdmRecordingModeMask rdmRecordingMode ;

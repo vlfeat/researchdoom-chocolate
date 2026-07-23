@@ -6,7 +6,6 @@
 
 RDM_ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/.."
 RDM=${RDM_ROOT}/bin/doom
-RDM_CONFIG=${RDM_ROOT}/bin/rdm.cfg
 
 (
 set -x

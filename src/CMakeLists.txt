@@ -124,6 +124,9 @@ set(GAME_SOURCE_FILES
     w_merge.c           w_merge.h
     z_zone.c            z_zone.h)
 
+set(RESEARCH_SOURCE_FILES
+    research.c          research.h)
+
 set(GAME_INCLUDE_DIRS "${CMAKE_CURRENT_BINARY_DIR}/../")
 
 if(WIN32)
@@ -143,7 +146,7 @@ set(DEHACKED_SOURCE_FILES
 
 # Some games support dehacked patches, some don't:
 
-set(SOURCE_FILES ${COMMON_SOURCE_FILES} ${GAME_SOURCE_FILES})
+set(SOURCE_FILES ${COMMON_SOURCE_FILES} ${GAME_SOURCE_FILES} ${RESEARCH_SOURCE_FILES})
 set(SOURCE_FILES_WITH_DEH ${SOURCE_FILES} ${DEHACKED_SOURCE_FILES})
 
 set(EXTRA_LIBS ${SDL_LINK_LIBS} textscreen pcsound opl)
@@ -169,6 +172,14 @@ endif()
 target_include_directories("${PROGRAM_PREFIX}doom" PRIVATE ${GAME_INCLUDE_DIRS})
 target_link_libraries("${PROGRAM_PREFIX}doom" doom ${EXTRA_LIBS})
 set_target_properties("${PROGRAM_PREFIX}doom" PROPERTIES COMPILE_FLAGS "${SDL_FLAGS}")
+
+# ResearchDoom post-build: copy chocolate-doom to bin/doom
+add_custom_command(TARGET "${PROGRAM_PREFIX}doom" POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_SOURCE_DIR}/bin"
+    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:${PROGRAM_PREFIX}doom> "${CMAKE_SOURCE_DIR}/bin/doom"
+    COMMENT "Copying ${PROGRAM_PREFIX}doom to bin/doom"
+)
+
 
 if(MSVC)
     set_target_properties("${PROGRAM_PREFIX}doom" PROPERTIES

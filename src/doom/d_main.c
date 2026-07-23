@@ -425,6 +425,9 @@ void D_RunFrame()
                                , 0, 0, SCREENWIDTH, SCREENHEIGHT, tics);
         I_UpdateNoBlit ();
         M_Drawer ();                            // menu is drawn even on top of wipes
+
+        rdmRecordThisFrame = rdmIsRecording && (gamestate == GS_LEVEL);
+
         I_FinishUpdate ();                      // page flip or blit buffer
         return;
     }

@@ -12,23 +12,16 @@ gameplay. To use it, compile to create the executable
 `./bin/doom`. The executable `./bin/doom` can be called directly or
 through the `./bin/rdm-record.sh` script.
 
-## Installation
+## Compiling
 
-Currently, the easier approach is to use the Codeblocks project
-`./codeblocks` in Windows, the Xcode project `./doom.xcodeproj` on
-macOS, or the `./Makefile.rdm` makefile for Linux.
+The preferred method is to use CMake. On macOS with brew to install
+the required dependencies:
 
-You will need to install SDL-1.2 and extra tools associated with
-it. For example, on macOS you can use
-[Homebrew](http://brew.sh/index.html) and:
-
-    brew install sdl sdl_mixer sdl_net libsamplerate libpng
-
-Do not forget to change the Xcode build setting `RDM_THIRD_PARTY` to
-point to your Homebrew installation prefix (usually `/usr/local`). You
-can then either use Xcode GUIs, or simply the command line:
-
-    xcodebuild -scheme doom RDM_THIRD_PARTY=/usr/local/
+```shell
+brew install sdl2 sdl2_mixer sdl2_net libsamplerate libpng fluid-synth
+cmake -S . -B build -G Ninja
+cmake --build build --target chocolate-doom
+```
 
 <a name='chocolate'></a>
 

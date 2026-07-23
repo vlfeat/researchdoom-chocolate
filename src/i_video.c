@@ -50,7 +50,6 @@
 
 #include "research.h"
 #include "d_loop.h"
-#include "doomstat.h"
 
 // These are (1) the window (or the full screen) that our game is rendered to
 // and (2) the renderer that scales the texture (see below) into this window.
@@ -773,8 +772,8 @@ void I_FinishUpdate (void)
     // Draw disk icon before blit, if necessary.
     V_DrawDiskIcon();
 
-    if (gamestate == GS_LEVEL) {
-        // record ony in-game frames
+
+    if (rdmRecordThisFrame) {
         rdmRecordRGB(gametic, I_VideoBuffer, &palette->r) ;
         rdmRecordDepth(gametic) ;
         rdmRecordObjects(gametic) ;

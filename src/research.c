@@ -20,6 +20,7 @@
 #include "research.h"
 
 bool rdmIsRecording = false ;
+bool rdmRecordThisFrame = false ;
 rdmRecordingModeMask rdmRecordingMode = 0 ;
 uint16_t * rdmDepthMapBuffer = NULL ;
 uint8_t * rdmObjectMapBuffer = NULL ;
@@ -440,6 +441,7 @@ void rdmStartRecording(size_t width, size_t height)
   }
 
   rdmIsRecording = true ;
+  rdmRecordThisFrame = true ;
 }
 
 void rdmStopRecording()
@@ -465,6 +467,7 @@ void rdmStopRecording()
 
 void rdmRecordLog(size_t tic, char const * format, ...)
 {
+  va_list va ;
   if (rdmLogFile) {
     fprintf(rdmLogFile, "%06zu ", tic) ;
     va_list va ;
