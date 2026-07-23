@@ -832,19 +832,28 @@ void R_SetupFrame (player_t* player)
     extralight = player->extralight;
 
     viewz = player->viewz;
-    
-    viewsin = finesine[viewangle>>ANGLETOFINESHIFT];
-    viewcos = finecosine[viewangle>>ANGLETOFINESHIFT];
 
     rdmRecordLog(gametic, "player:%g,%g,%g,%g",
                  (double)viewx / FRACUNIT,
                  (double)viewy / FRACUNIT,
                  (double)viewz / FRACUNIT,
                  (double)viewangle / ANG180 * 3.14159265358979323846) ;
+
+    if (rdmFixCamera)
+    {
+        viewx = rdmFixedCameraX;
+        viewy = rdmFixedCameraY;
+        viewz = rdmFixedCameraZ;
+        viewangle = rdmFixedCameraAngle;
+        extralight = 0;
+    }
+
+    viewsin = finesine[viewangle>>ANGLETOFINESHIFT];
+    viewcos = finecosine[viewangle>>ANGLETOFINESHIFT];
 	
     sscount = 0;
 	
-    if (player->fixedcolormap)
+    if (player->fixedcolormap) // TODO: Fix for fixed camera
     {
 	fixedcolormap =
 	    colormaps

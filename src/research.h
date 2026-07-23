@@ -38,6 +38,12 @@ extern rdmRecordingModeMask rdmRecordingMode ;
 extern uint16_t * rdmDepthMapBuffer ;
 extern uint8_t * rdmObjectMapBuffer ;
 
+extern boolean rdmFixCamera;
+extern fixed_t rdmFixedCameraX;
+extern fixed_t rdmFixedCameraY;
+extern fixed_t rdmFixedCameraZ;
+extern angle_t rdmFixedCameraAngle;
+
 void rdmInit() ;
 void rdmFinish() ;
 
@@ -52,5 +58,7 @@ void rdmFlushLog() ;
 void rdmRecordRGB(size_t tic, uint8_t const * pixels, uint8_t const * palette) ;
 void rdmRecordDepth(size_t tic) ;
 void rdmRecordObjects(size_t tic) ;
+
+void rdmSetFixedCamera(int x, int y, int z, int angle_degrees);
 
 #endif /* research_h */

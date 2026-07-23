@@ -2009,6 +2009,16 @@ void D_DoomMain (void)
         singletics = true;
     }
 
+    p = M_CheckParmWithArgs("-rdm-fixedcamera", 4);
+    if (p)
+    {
+        int x = atoi(myargv[p + 1]);
+        int y = atoi(myargv[p + 2]);
+        int z = atoi(myargv[p + 3]);
+        int angle = atoi(myargv[p + 4]);
+        rdmSetFixedCamera(x, y, z, angle);
+    }
+
     //!
     // @arg <x>
     // @category demo

@@ -33,6 +33,12 @@ size_t rdmFrameHeight ;
 size_t rdmFrameWidth ;
 FILE * rdmLogFile = NULL ;
 
+boolean rdmFixCamera;
+fixed_t rdmFixedCameraX;
+fixed_t rdmFixedCameraY;
+fixed_t rdmFixedCameraZ;
+angle_t rdmFixedCameraAngle;
+
 char const* researchObjectTypeNames [] = {
   "PLAYER",
   "POSSESSED",
@@ -470,7 +476,6 @@ void rdmRecordLog(size_t tic, char const * format, ...)
   va_list va ;
   if (rdmLogFile) {
     fprintf(rdmLogFile, "%06zu ", tic) ;
-    va_list va ;
     va_start(va, format);
     vfprintf(rdmLogFile, format, va) ;
     va_end(va);
@@ -516,4 +521,15 @@ void rdmRecordObjects(size_t tic)
   }
 }
 
-
+// Function to parse and set frozen camera position
+void rdmSetFixedCamera(int x, int y, int z, int angle_degrees)
+{
+    rdmFixCamera = true;
+    rdmFixedCameraX = x << FRACBITS;
+    rdmFixedCameraY = y << FRACBITS;
+    rdmFixedCameraZ = z << FRACBITS;
+    rdmFixedCameraAngle = (angle_t)((double)angle_degrees/180.0 * ANG180);
+    
+    printf("ResearchDoom: Camera frozen at (%d, %d, %d) angle %d degrees\n",
+           x, y, z, angle_degrees);
+}
