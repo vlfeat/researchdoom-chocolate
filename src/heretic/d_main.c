@@ -19,8 +19,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "doomfeatures.h"
-
 #include "txt_main.h"
 #include "txt_io.h"
 
@@ -32,6 +30,7 @@
 #include "deh_main.h"
 #include "d_iwad.h"
 #include "i_endoom.h"
+#include "i_input.h"
 #include "i_joystick.h"
 #include "i_sound.h"
 #include "i_system.h"
@@ -45,6 +44,9 @@
 #include "s_sound.h"
 #include "w_main.h"
 #include "v_video.h"
+#include "am_map.h"
+
+#include "heretic_icon.c"
 
 #define CT_KEY_GREEN    'g'
 #define CT_KEY_YELLOW   'y'
@@ -55,7 +57,7 @@
 #define STARTUP_WINDOW_Y 7
 
 GameMode_t gamemode = indetermined;
-char *gamedescription = "unknown";
+const char *gamedescription = "unknown";
 
 boolean nomonsters;             // checkparm of -nomonsters
 boolean respawnparm;            // checkparm of -respawn
@@ -72,7 +74,6 @@ static int graphical_startup = 1;
 static boolean using_graphical_startup;
 static boolean main_loop_started = false;
 boolean autostart;
-extern boolean automapactive;
 
 boolean advancedemo;
 
@@ -138,14 +139,9 @@ void DrawMessage(void)
 //
 //---------------------------------------------------------------------------
 
-void R_ExecuteSetViewSize(void);
-
-extern boolean finalestage;
 
 void D_Display(void)
 {
-    extern boolean askforquit;
-
     // Change the view size if needed
     if (setsizeneeded)
     {
@@ -239,10 +235,11 @@ void D_DoomLoop(void)
     {
         char filename[20];
         M_snprintf(filename, sizeof(filename), "debug%i.txt", consoleplayer);
-        debugfile = fopen(filename, "w");
+        debugfile = M_fopen(filename, "w");
     }
     I_GraphicsCheckCommandLine();
     I_SetGrabMouseCallback(D_GrabMouseCallback);
+    I_RegisterWindowIcon(heretic_icon_data, heretic_icon_w, heretic_icon_h);
     I_InitGraphics();
 
     main_loop_started = true;
@@ -270,9 +267,9 @@ void D_DoomLoop(void)
 ===============================================================================
 */
 
-int demosequence;
-int pagetic;
-char *pagename;
+static int demosequence;
+static int pagetic;
+static const char *pagename;
 
 
 /*
@@ -402,7 +399,7 @@ void D_StartTitle(void)
 =
 = D_CheckRecordFrom
 =
-= -recordfrom <savegame num> <demoname>
+= -recordfrom <save-num> <demo-name>
 ==============
 */
 
@@ -414,10 +411,10 @@ void D_CheckRecordFrom(void)
     //!
     // @vanilla
     // @category demo
-    // @arg <savenum> <demofile>
+    // @arg <save-num> <demo-name>
     //
-    // Record a demo, loading from the given filename. Equivalent
-    // to -loadgame <savenum> -record <demofile>.
+    // Load a game from the given savegame slot and record a demo from
+    // it.  Equivalent to -loadgame <save-num> -record <demo-name>.
 
     p = M_CheckParmWithArgs("-recordfrom", 2);
     if (!p)
@@ -449,7 +446,6 @@ void D_CheckRecordFrom(void)
 
 char *iwadfile;
 
-char *basedefault = "heretic.cfg";
 
 void wadprintf(void)
 {
@@ -457,15 +453,6 @@ void wadprintf(void)
     {
         return;
     }
-    // haleyjd FIXME: convert to textscreen code?
-#ifdef __WATCOMC__
-    _settextposition(23, 2);
-    _setbkcolor(1);
-    _settextcolor(0);
-    _outtext(exrnwads);
-    _settextposition(24, 2);
-    _outtext(exrnwads2);
-#endif
 }
 
 boolean D_AddFile(char *file)
@@ -498,7 +485,7 @@ char smsg[80];                  // status bar line
 
 static int startup_line = STARTUP_WINDOW_Y;
 
-void hprintf(char *string)
+void hprintf(const char *string)
 {
     if (using_graphical_startup)
     {
@@ -531,7 +518,7 @@ void drawstatus(void)
     }
 }
 
-void status(char *string)
+static void status(const char *string)
 {
     if (using_graphical_startup)
     {
@@ -550,41 +537,6 @@ void DrawThermo(void)
     {
         return;
     }
-
-#if 0
-    progress = (98 * thermCurrent) / thermMax;
-    screen = (char *) 0xb8000 + (THERM_Y * 160 + THERM_X * 2);
-    for (i = 0; i < progress / 2; i++)
-    {
-        switch (i)
-        {
-            case 4:
-            case 9:
-            case 14:
-            case 19:
-            case 29:
-            case 34:
-            case 39:
-            case 44:
-                *screen++ = 0xb3;
-                *screen++ = (THERMCOLOR << 4) + 15;
-                break;
-            case 24:
-                *screen++ = 0xba;
-                *screen++ = (THERMCOLOR << 4) + 15;
-                break;
-            default:
-                *screen++ = 0xdb;
-                *screen++ = 0x40 + THERMCOLOR;
-                break;
-        }
-    }
-    if (progress & 1)
-    {
-        *screen++ = 0xdd;
-        *screen++ = 0x40 + THERMCOLOR;
-    }
-#else
 
     // No progress? Don't update the screen.
 
@@ -608,7 +560,6 @@ void DrawThermo(void)
     }
 
     TXT_UpdateScreen();
-#endif
 }
 
 void initStartup(void)
@@ -657,41 +608,9 @@ static void finishStartup(void)
 }
 
 char tmsg[300];
-void tprintf(char *msg, int initflag)
+void tprintf(const char *msg, int initflag)
 {
-    // haleyjd FIXME: convert to textscreen code?
-#ifdef __WATCOMC__
-    char temp[80];
-    int start;
-    int add;
-    int i;
-
-    if (initflag)
-        tmsg[0] = 0;
-    M_StringConcat(tmsg, msg, sizeof(tmsg));
-    blitStartup();
-    DrawThermo();
-    _setbkcolor(4);
-    _settextcolor(15);
-    for (add = start = i = 0; i <= strlen(tmsg); i++)
-        if ((tmsg[i] == '\n') || (!tmsg[i]))
-        {
-            memset(temp, 0, 80);
-            M_StringCopy(temp, tmsg + start, sizeof(temp));
-            if (i - start < sizeof(temp))
-            {
-                temp[i - start] = '\0';
-            }
-            _settextposition(MSG_Y + add, 40 - strlen(temp) / 2);
-            _outtext(temp);
-            start = i + 1;
-            add++;
-        }
-    _settextposition(25, 1);
-    drawstatus();
-#else
     printf("%s", msg);
-#endif
 }
 
 // haleyjd: moved up, removed WATCOMC code
@@ -732,12 +651,11 @@ void InitThermo(int max)
 
 void D_BindVariables(void)
 {
-    extern int screenblocks;
-    extern int snd_Channels;
     int i;
 
     M_ApplyPlatformDefaults();
 
+    I_BindInputVariables();
     I_BindVideoVariables();
     I_BindJoystickVariables();
     I_BindSoundVariables();
@@ -755,9 +673,7 @@ void D_BindVariables(void)
     M_BindMenuControls();
     M_BindMapControls();
 
-#ifdef FEATURE_MULTIPLAYER
     NET_BindVariables();
-#endif
 
     M_BindIntVariable("mouse_sensitivity",      &mouseSensitivity);
     M_BindIntVariable("sfx_volume",             &snd_MaxVolume);
@@ -816,6 +732,7 @@ void D_DoomMain(void)
     I_AtExit(D_Endoom, false);
 
     //!
+    // @category game
     // @vanilla
     //
     // Disable monsters.
@@ -824,6 +741,7 @@ void D_DoomMain(void)
     nomonsters = M_ParmExists("-nomonsters");
 
     //!
+    // @category game
     // @vanilla
     //
     // Monsters respawn after being killed.
@@ -840,6 +758,7 @@ void D_DoomMain(void)
     ravpic = M_ParmExists("-ravpic");
 
     //!
+    // @category obscure
     // @vanilla
     //
     // Allow artifacts to be used when the run key is held down.
@@ -870,6 +789,7 @@ void D_DoomMain(void)
     }
 
     //!
+    // @category game
     // @arg <skill>
     // @vanilla
     //
@@ -885,10 +805,11 @@ void D_DoomMain(void)
     }
 
     //!
+    // @category game
     // @arg <n>
     // @vanilla
     //
-    // Start playing on episode n (1-4)
+    // Start playing episode n (1-4).
     //
 
     p = M_CheckParmWithArgs("-episode", 1);
@@ -900,6 +821,7 @@ void D_DoomMain(void)
     }
 
     //!
+    // @category game
     // @arg <x> <y>
     // @vanilla
     //
@@ -927,6 +849,7 @@ void D_DoomMain(void)
 #ifdef _WIN32
 
     //!
+    // @category obscure
     // @platform windows
     // @vanilla
     //
@@ -973,10 +896,25 @@ void D_DoomMain(void)
     D_AddFile(iwadfile);
     W_CheckCorrectIWAD(heretic);
 
-#ifdef FEATURE_DEHACKED
+    //!
+    // @category mod
+    //
+    // Disable auto-loading of .wad files.
+    //
+    if (!M_ParmExists("-noautoload"))
+    {
+        char *autoload_dir;
+        autoload_dir = M_GetAutoloadDir("heretic.wad");
+        if (autoload_dir != NULL)
+        {
+            DEH_AutoLoadPatches(autoload_dir);
+            W_AutoLoadWADs(autoload_dir);
+            free(autoload_dir);
+        }
+    }
+
     // Load dehacked patches specified on the command line.
     DEH_ParseCommandLine();
-#endif
 
     // Load PWAD files.
     W_ParseCommandLine();
@@ -1037,6 +975,9 @@ void D_DoomMain(void)
         printf("Playing demo %s.\n", file);
     }
 
+    // Generate the WAD hash table.  Speed things up a bit.
+    W_GenerateHashTable();
+
     //!
     // @category demo
     //
@@ -1079,13 +1020,11 @@ void D_DoomMain(void)
     }
 
     I_InitTimer();
-    I_InitSound(false);
+    I_InitSound(heretic);
     I_InitMusic();
 
-#ifdef FEATURE_MULTIPLAYER
     tprintf("NET_Init: Init network subsystem.\n", 1);
     NET_Init ();
-#endif
 
     D_ConnectNetGame();
 
@@ -1149,7 +1088,7 @@ void D_DoomMain(void)
     IncThermo();
 
 //
-// start the apropriate game based on parms
+// start the appropriate game based on params
 //
 
     D_CheckRecordFrom();
@@ -1185,6 +1124,7 @@ void D_DoomMain(void)
     }
 
     //!
+    // @category game
     // @arg <s>
     // @vanilla
     //

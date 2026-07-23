@@ -20,6 +20,7 @@
 
 
 #include <math.h>
+#include <stdlib.h>
 
 #include "z_zone.h"
 
@@ -109,6 +110,7 @@ byte*		rejectmatrix;
 mapthing_t	deathmatchstarts[MAX_DEATHMATCH_STARTS];
 mapthing_t*	deathmatch_p;
 mapthing_t	playerstarts[MAXPLAYERS];
+boolean     playerstartsingame[MAXPLAYERS];
 
 
 
@@ -389,6 +391,18 @@ void P_LoadThings (int lump)
 	spawnthing.options = SHORT(mt->options);
 	
 	P_SpawnMapThing(&spawnthing);
+    }
+
+    if (!deathmatch)
+    {
+        for (i = 0; i < MAXPLAYERS; i++)
+        {
+            if (playeringame[i] && !playerstartsingame[i])
+            {
+                I_Error("P_LoadThings: Player %d start missing (vanilla crashes here)", i + 1);
+            }
+            playerstartsingame[i] = false;
+        }
     }
 
     W_ReleaseLumpNum(lump);
@@ -679,11 +693,13 @@ static void PadRejectArray(byte *array, unsigned int len)
 
     unsigned int rejectpad[4] =
     {
-        ((totallines * 4 + 3) & ~3) + 24,     // Size
+        0,                                    // Size
         0,                                    // Part of z_zone block header
         50,                                   // PU_LEVEL
         0x1d4a11                              // DOOM_CONST_ZONEID
     };
+
+    rejectpad[0] = ((totallines * 4 + 3) & ~3) + 24;
 
     // Copy values from rejectpad into the destination array.
 
@@ -701,7 +717,7 @@ static void PadRejectArray(byte *array, unsigned int len)
 
     if (len > sizeof(rejectpad))
     {
-        fprintf(stderr, "PadRejectArray: REJECT lump too short to pad! (%i > %i)\n",
+        fprintf(stderr, "PadRejectArray: REJECT lump too short to pad! (%u > %i)\n",
                         len, (int) sizeof(rejectpad));
 
         // Pad remaining space with 0 (or 0xff, if specified on command line).
@@ -712,7 +728,7 @@ static void PadRejectArray(byte *array, unsigned int len)
         }
         else
         {
-            padvalue = 0xf00;
+            padvalue = 0x00;
         }
 
         memset(array + sizeof(rejectpad), padvalue, len - sizeof(rejectpad));
@@ -746,6 +762,9 @@ static void P_LoadReject(int lumpnum)
         PadRejectArray(rejectmatrix + lumplen, minlength - lumplen);
     }
 }
+
+// pointer to the current map lump info struct
+lumpinfo_t *maplumpinfo;
 
 //
 // P_SetupLevel
@@ -803,6 +822,8 @@ P_SetupLevel
 
     lumpnum = W_GetNumForName (lumpname);
 	
+    maplumpinfo = lumpinfo[lumpnum];
+
     leveltime = 0;
 	
     // note: most of this ordering is important	

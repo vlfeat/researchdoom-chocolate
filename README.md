@@ -118,12 +118,13 @@ chocolate-doom -merge aoddoom1.wad -deh aoddoom1.deh  (Army of Darkness Doom)
    you may have regarding the port!
 
  * Chocolate Doom is not perfect. Although it aims to accurately
-   emulate reproduce the DOS executables, some behavior can be very
+   emulate and reproduce the DOS executables, some behavior can be very
    difficult to reproduce. Because of the nature of the project, you
    may also encounter Vanilla Doom bugs; these are intentionally
    present; see the NOT-BUGS file for more information.
 
-   New bug reports can be submitted to the issue tracker on Github:
+   New bug reports, feedback, questions or suggestions can be submitted
+   to the issue tracker on Github:
 
      https://github.com/chocolate-doom/chocolate-doom/issues
 
@@ -133,6 +134,3 @@ chocolate-doom -merge aoddoom1.wad -deh aoddoom1.deh  (Army of Darkness Doom)
 
  * Chocolate Doom is distributed under the GNU GPL. See the COPYING
    file for more information.
-
- * Please send any feedback, questions or suggestions to
-   chocolate-doom-dev-list@chocolate-doom.org. Thanks!

@@ -23,7 +23,6 @@
 #include <time.h>
 
 #include "config.h"
-#include "doomfeatures.h"
 
 #include "h2def.h"
 #include "ct_chat.h"
@@ -31,6 +30,7 @@
 #include "d_mode.h"
 #include "m_misc.h"
 #include "s_sound.h"
+#include "i_input.h"
 #include "i_joystick.h"
 #include "i_system.h"
 #include "i_timer.h"
@@ -41,6 +41,9 @@
 #include "p_local.h"
 #include "v_video.h"
 #include "w_main.h"
+#include "am_map.h"
+
+#include "hexen_icon.c"
 
 // MACROS ------------------------------------------------------------------
 
@@ -68,10 +71,7 @@ void S_InitScript(void);
 
 // PUBLIC FUNCTION PROTOTYPES ----------------------------------------------
 
-void H2_ProcessEvents(void);
-void H2_DoAdvanceDemo(void);
 void H2_AdvanceDemo(void);
-void H2_StartTitle(void);
 void H2_PageTicker(void);
 
 // PRIVATE FUNCTION PROTOTYPES ---------------------------------------------
@@ -86,14 +86,12 @@ static void WarpCheck(void);
 
 // EXTERNAL DATA DECLARATIONS ----------------------------------------------
 
-extern boolean automapactive;
-extern boolean MenuActive;
-extern boolean askforquit;
 
 // PUBLIC DATA DEFINITIONS -------------------------------------------------
 
 GameMode_t gamemode;
-char *gamedescription;
+GameVersion_t gameversion = exe_hexen_1_1;
+static const char *gamedescription;
 char *iwadfile;
 static char demolumpname[9];    // Demo lump to start playing.
 boolean nomonsters;             // checkparm of -nomonsters
@@ -119,9 +117,26 @@ int maxplayers = MAXPLAYERS;
 static int WarpMap;
 static int demosequence;
 static int pagetic;
-static char *pagename;
+static const char *pagename;
+static char *SavePathConfig;
 
 // CODE --------------------------------------------------------------------
+
+
+static const char * const chat_macro_defaults[10] =
+{
+    HUSTR_CHATMACRO0,
+    HUSTR_CHATMACRO1,
+    HUSTR_CHATMACRO2,
+    HUSTR_CHATMACRO3,
+    HUSTR_CHATMACRO4,
+    HUSTR_CHATMACRO5,
+    HUSTR_CHATMACRO6,
+    HUSTR_CHATMACRO7,
+    HUSTR_CHATMACRO8,
+    HUSTR_CHATMACRO9,
+};
+
 
 void D_BindVariables(void)
 {
@@ -129,6 +144,7 @@ void D_BindVariables(void)
 
     M_ApplyPlatformDefaults();
 
+    I_BindInputVariables();
     I_BindVideoVariables();
     I_BindJoystickVariables();
     I_BindSoundVariables();
@@ -150,9 +166,7 @@ void D_BindVariables(void)
     key_multi_msgplayer[6] = CT_KEY_PLAYER7;
     key_multi_msgplayer[7] = CT_KEY_PLAYER8;
 
-#ifdef FEATURE_MULTIPLAYER
     NET_BindVariables();
-#endif
 
     M_BindIntVariable("graphical_startup",      &graphical_startup);
     M_BindIntVariable("mouse_sensitivity",      &mouseSensitivity);
@@ -164,7 +178,7 @@ void D_BindVariables(void)
     M_BindIntVariable("vanilla_savegame_limit", &vanilla_savegame_limit);
     M_BindIntVariable("vanilla_demo_limit",     &vanilla_demo_limit);
 
-    M_BindStringVariable("savedir", &SavePath);
+    M_BindStringVariable("savedir", &SavePathConfig);
 
     // Multiplayer chat macros
 
@@ -172,6 +186,7 @@ void D_BindVariables(void)
     {
         char buf[12];
 
+        chat_macros[i] = M_StringDuplicate(chat_macro_defaults[i]);
         M_snprintf(buf, sizeof(buf), "chatmacro%i", i);
         M_BindStringVariable(buf, &chat_macros[i]);
     }
@@ -183,14 +198,30 @@ static void D_SetDefaultSavePath(void)
 {
     SavePath = M_GetSaveGameDir("hexen.wad");
 
-    // If we are not using a savegame path (probably because we are on
-    // Windows and not using a config dir), behave like Vanilla Hexen
-    // and use hexndata/:
-
     if (!strcmp(SavePath, ""))
     {
-        SavePath = malloc(10);
-	M_snprintf(SavePath, 10, "hexndata%c", DIR_SEPARATOR);
+        // only get hexen.cfg path if one is not already found
+
+        if (SavePathConfig == NULL || !strcmp(SavePathConfig, ""))
+        {
+            // If we are not using a savegame path (probably because we are on
+            // Windows and not using a config dir), behave like Vanilla Hexen
+            // and use hexndata/:
+
+            SavePath = malloc(10);
+            M_snprintf(SavePath, 10, "hexndata%c", DIR_SEPARATOR);
+        }
+        else
+        {
+            SavePath = M_StringDuplicate(SavePathConfig);
+        }
+    }
+
+    // only set hexen.cfg path if using default handling
+
+    if (!M_ParmExists("-savedir") && !M_ParmExists("-cdrom"))
+    {
+        SavePathConfig = SavePath;
     }
 }
 
@@ -322,6 +353,81 @@ void D_SetGameDescription(void)
     }
 }
 
+static const struct
+{
+    const char *description;
+    const char *cmdline;
+    GameVersion_t version;
+} gameversions[] = {
+    {"Hexen 1.1",            "1.1",        exe_hexen_1_1},
+    {"Hexen 1.1 (alt)",      "1.1r2",      exe_hexen_1_1r2},
+    { NULL,                  NULL,         0},
+};
+
+// Initialize the game version
+
+static void InitGameVersion(void)
+{
+    int p;
+
+    //!
+    // @arg <version>
+    // @category compat
+    //
+    // Emulate a specific version of Hexen.
+    // Valid values are "1.1" and "1.1r2".
+    //
+
+    p = M_CheckParmWithArgs("-gameversion", 1);
+
+    if (p)
+    {
+        int i;
+        for (i=0; gameversions[i].description != NULL; ++i)
+        {
+            if (!strcmp(myargv[p+1], gameversions[i].cmdline))
+            {
+                gameversion = gameversions[i].version;
+                break;
+            }
+        }
+
+        if (gameversions[i].description == NULL)
+        {
+            printf("Supported game versions:\n");
+
+            for (i=0; gameversions[i].description != NULL; ++i)
+            {
+                printf("\t%s (%s)\n", gameversions[i].cmdline,
+                        gameversions[i].description);
+            }
+
+            I_Error("Unknown game version '%s'", myargv[p+1]);
+        }
+    }
+    else
+    {
+        // Determine automatically
+
+        gameversion = exe_hexen_1_1;
+    }
+}
+
+void PrintGameVersion(void)
+{
+    int i;
+
+    for (i=0; gameversions[i].description != NULL; ++i)
+    {
+        if (gameversions[i].version == gameversion)
+        {
+            printf("Emulating the behavior of the "
+                   "'%s' executable.\n", gameversions[i].description);
+            break;
+        }
+    }
+}
+
 //==========================================================================
 //
 // H2_Main
@@ -355,6 +461,7 @@ void D_DoomMain(void)
 #ifdef _WIN32
 
     //!
+    // @category obscure
     // @platform windows
     // @vanilla
     //
@@ -374,14 +481,14 @@ void D_DoomMain(void)
         M_SetConfigDir(NULL);
     }
 
-    D_SetDefaultSavePath();
     M_SetConfigFilenames("hexen.cfg", PROGRAM_PREFIX "hexen.cfg");
     M_LoadDefaults();
 
+    D_SetDefaultSavePath();
+
     I_AtExit(M_SaveDefaults, false);
 
-
-    // Now that the savedir is loaded from .CFG, make sure it exists
+    // Now that the savedir is loaded, make sure it exists
     CreateSavePath();
 
     ST_Message("Z_Init: Init zone memory allocation daemon.\n");
@@ -402,10 +509,31 @@ void D_DoomMain(void)
     D_AddFile(iwadfile);
     W_CheckCorrectIWAD(hexen);
     D_IdentifyVersion();
+    InitGameVersion();
     D_SetGameDescription();
     AdjustForMacIWAD();
 
+    //!
+    // @category mod
+    //
+    // Disable auto-loading of .wad files.
+    //
+    if (!M_ParmExists("-noautoload"))
+    {
+        char *autoload_dir;
+        autoload_dir = M_GetAutoloadDir("hexen.wad");
+        if (autoload_dir != NULL)
+        {
+            // TODO? DEH_AutoLoadPatches(autoload_dir);
+            W_AutoLoadWADs(autoload_dir);
+            free(autoload_dir);
+        }
+    }
+
     HandleArgs();
+
+    // Generate the WAD hash table.  Speed things up a bit.
+    W_GenerateHashTable();
 
     I_PrintStartupBanner(gamedescription);
 
@@ -426,13 +554,11 @@ void D_DoomMain(void)
     I_CheckIsScreensaver();
     I_InitTimer();
     I_InitJoystick();
-    I_InitSound(false);
+    I_InitSound(hexen);
     I_InitMusic();
 
-#ifdef FEATURE_MULTIPLAYER
     ST_Message("NET_Init: Init networking subsystem.\n");
     NET_Init();
-#endif
     D_ConnectNetGame();
 
     S_Init();
@@ -459,6 +585,8 @@ void D_DoomMain(void)
     ST_Message("D_CheckNetGame: Checking network game status.\n");
     D_CheckNetGame();
 
+    PrintGameVersion();
+
     ST_Message("SB_Init: Loading patches.\n");
     SB_Init();
 
@@ -471,6 +599,14 @@ void D_DoomMain(void)
     }
 
     CheckRecordFrom();
+
+    //!
+    // @arg <x>
+    // @category demo
+    // @vanilla
+    //
+    // Record a demo named x.lmp.
+    //
 
     p = M_CheckParm("-record");
     if (p && p < myargc - 1)
@@ -495,6 +631,7 @@ void D_DoomMain(void)
     }
 
     //!
+    // @category game
     // @arg <s>
     // @vanilla
     //
@@ -535,6 +672,7 @@ static void HandleArgs(void)
     int p;
 
     //!
+    // @category game
     // @vanilla
     //
     // Disable monsters.
@@ -543,6 +681,7 @@ static void HandleArgs(void)
     nomonsters = M_ParmExists("-nomonsters");
 
     //!
+    // @category game
     // @vanilla
     //
     // Monsters respawn after being killed.
@@ -569,6 +708,7 @@ static void HandleArgs(void)
     ravpic = M_ParmExists("-ravpic");
 
     //!
+    // @category obscure
     // @vanilla
     //
     // Don't allow artifacts to be used when the run key is held down.
@@ -594,6 +734,7 @@ static void HandleArgs(void)
     W_ParseCommandLine();
 
     //!
+    // @category obscure
     // @vanilla
     // @arg <path>
     //
@@ -609,6 +750,7 @@ static void HandleArgs(void)
     }
 
     //!
+    // @category game
     // @arg <skill>
     // @vanilla
     //
@@ -709,6 +851,14 @@ static void WarpCheck(void)
     int p;
     int map;
 
+    //!
+    // @category game
+    // @arg x
+    // @vanilla
+    //
+    // Start a game immediately, warping to MAPx.
+    //
+
     p = M_CheckParm("-warp");
     if (p && p < myargc - 1)
     {
@@ -748,11 +898,12 @@ void H2_GameLoop(void)
     {
         char filename[20];
         M_snprintf(filename, sizeof(filename), "debug%i.txt", consoleplayer);
-        debugfile = fopen(filename, "w");
+        debugfile = M_fopen(filename, "w");
     }
     I_SetWindowTitle(gamedescription);
     I_GraphicsCheckCommandLine();
     I_SetGrabMouseCallback(D_GrabMouseCallback);
+    I_RegisterWindowIcon(hexen_icon_data, hexen_icon_w, hexen_icon_h);
     I_InitGraphics();
 
     while (1)
@@ -1022,7 +1173,7 @@ void H2_StartTitle(void)
 //
 // CheckRecordFrom
 //
-// -recordfrom <savegame num> <demoname>
+// -recordfrom <save-num> <demo-name>
 //
 //==========================================================================
 
@@ -1030,6 +1181,14 @@ static void CheckRecordFrom(void)
 {
     int p;
 
+    //!
+    // @vanilla
+    // @category demo
+    // @arg <save-num> <demo-name>
+    //
+    // Load a game from the given savegame slot and record a demo from
+    // it.  Equivalent to -loadgame <save-num> -record <demo-name>.
+    //
     p = M_CheckParm("-recordfrom");
     if (!p || p > myargc - 2)
     {                           // Bad args
