@@ -27,8 +27,6 @@
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
-      <Testables>
-      </Testables>
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
@@ -38,8 +36,8 @@
             ReferencedContainer = "container:doom.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
-      <AdditionalOptions>
-      </AdditionalOptions>
+      <Testables>
+      </Testables>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
@@ -67,7 +65,7 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "-playdemo $(SRCROOT)/lmps/ep1-507.LMP"
+            argument = "-playdemo $(SRCROOT)/lmps/e1m1max30.lmp"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
@@ -102,6 +100,18 @@
             argument = "-rdm-syncframes"
             isEnabled = "YES">
          </CommandLineArgument>
+         <CommandLineArgument
+            argument = "-rdm-fixedcamera 1024 -3264 32 270"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "-rdm-fixedcamera 2272 -2432 64 180"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "-rdm-fixedcamera -160 -3232 132 0"
+            isEnabled = "YES">
+         </CommandLineArgument>
       </CommandLineArguments>
       <EnvironmentVariables>
          <EnvironmentVariable
@@ -110,8 +120,6 @@
             isEnabled = "YES">
          </EnvironmentVariable>
       </EnvironmentVariables>
-      <AdditionalOptions>
-      </AdditionalOptions>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
