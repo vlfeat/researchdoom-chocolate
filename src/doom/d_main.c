@@ -2009,6 +2009,12 @@ void D_DoomMain (void)
         singletics = true;
     }
 
+    if (M_CheckParm("-rdm-fixed-palette"))
+    {
+        DEH_printf("ResearchDoom: forcing the standard palette (-rdm-fixed-palette).\n") ;
+        rdmFixedPalette = true;
+    }
+
     p = M_CheckParmWithArgs("-rdm-fixedcamera", 4);
     if (p)
     {

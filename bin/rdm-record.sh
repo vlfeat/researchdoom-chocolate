@@ -19,5 +19,6 @@ ${RDM} \
     -rdm-syncframes \
     -rdm-rgb \
     -rdm-depth \
-    -rdm-objects
+    -rdm-objects \
+    "${@:4}"
 )

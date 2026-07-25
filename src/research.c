@@ -26,6 +26,7 @@ uint16_t * rdmDepthMapBuffer = NULL ;
 uint8_t * rdmObjectMapBuffer = NULL ;
 bool rdmHidePlayer = false ;
 bool rdmSyncFrames = false ;
+bool rdmFixedPalette = false ;
 
 char rdmBaseName [1024] ;
 size_t rdmLastRecordedTic = 0 ;

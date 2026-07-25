@@ -46,6 +46,7 @@
 
 #include "am_map.h"
 #include "m_cheat.h"
+#include "research.h"
 
 #include "s_sound.h"
 
@@ -889,6 +890,12 @@ void ST_doPaletteStuff(void)
 
     cnt = plyr->damagecount;
 
+    if (rdmFixedPalette)
+    {
+        palette = 0;
+    }
+    else
+    {
     if (plyr->powers[pw_strength])
     {
 	// slowly fade the berzerk out
@@ -933,6 +940,7 @@ void ST_doPaletteStuff(void)
      && palette >= STARTREDPALS && palette < STARTREDPALS + NUMREDPALS)
     {
         palette = RADIATIONPAL;
+    }
     }
 
     if (palette != st_palette)

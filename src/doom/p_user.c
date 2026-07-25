@@ -24,6 +24,8 @@
 #include "doomdef.h"
 #include "d_event.h"
 
+#include "research.h"
+
 #include "p_local.h"
 
 #include "doomstat.h"
@@ -353,7 +355,12 @@ void P_PlayerThink (player_t* player)
 
     
     // Handling colormaps.
-    if (player->powers[pw_invulnerability])
+    if (rdmFixedPalette)
+	{
+		player->fixedcolormap = 0;
+	}
+	else
+	if (player->powers[pw_invulnerability])
     {
 	if (player->powers[pw_invulnerability] > 4*32
 	    || (player->powers[pw_invulnerability]&8) )
