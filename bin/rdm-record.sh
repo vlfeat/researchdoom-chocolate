@@ -14,6 +14,7 @@ ${RDM} \
     -playdemo "$2" \
     -config ${RDM_ROOT}/etc/rdm.cfg \
     -extraconfig ${RDM_ROOT}/etc/rdm-extra.cfg \
+    -nosound \
     -rdm-outdir "$3" \
     -rdm-hideplayer \
     -rdm-syncframes \
