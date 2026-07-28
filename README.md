@@ -23,6 +23,16 @@ cmake -S . -B build -G Ninja
 cmake --build build --target chocolate-doom
 ```
 
+## Known issues
+
+While Doom should be completely deterministic, we notice that, when the
+same demo is played twice on the same hardware, the recorded RGB images may
+differ by one or two pixel values. This is very rare (a few pixels in an
+hour of gameplay), and does not appear to affect the recorded depth or
+object buffers at all, which reproduce exactly. The origin of this
+undeterminism is unclear; it might be due to uninitialized variables in the
+Doom engine.
+
 <a name='chocolate'></a>
 
 # Chocolate Doom
