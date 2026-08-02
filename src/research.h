@@ -35,6 +35,7 @@ extern bool rdmRecordThisFrame ;
 extern bool rdmHidePlayer ;
 extern bool rdmSyncFrames ;
 extern bool rdmFixedPalette ;
+extern size_t rdmStopTic ;
 extern rdmRecordingModeMask rdmRecordingMode ;
 extern uint16_t * rdmDepthMapBuffer ;
 extern uint8_t * rdmObjectMapBuffer ;

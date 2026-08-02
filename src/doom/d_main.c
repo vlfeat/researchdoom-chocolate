@@ -429,6 +429,12 @@ void D_RunFrame()
         rdmRecordThisFrame = rdmIsRecording && (gamestate == GS_LEVEL);
 
         I_FinishUpdate ();                      // page flip or blit buffer
+
+        if (rdmStopTic > 0 && gametic >= (int) rdmStopTic)
+        {
+            I_Quit();
+        }
+
         return;
     }
 
@@ -451,6 +457,11 @@ void D_RunFrame()
         } else {
             // normal update
             I_FinishUpdate ();              // page flip or blit buffer
+
+            if (rdmStopTic > 0 && gametic >= (int) rdmStopTic)
+            {
+                I_Quit();
+            }
         }
     }
 }
@@ -2013,6 +2024,13 @@ void D_DoomMain (void)
     {
         DEH_printf("ResearchDoom: forcing the standard palette (-rdm-fixed-palette).\n") ;
         rdmFixedPalette = true;
+    }
+
+    p = M_CheckParmWithArgs("-rdm-stop-tic", 1);
+    if (p)
+    {
+        rdmStopTic = strtoul(myargv[p + 1], NULL, 10);
+        DEH_printf("ResearchDoom: stopping after tic %zu (-rdm-stop-tic).\n", rdmStopTic) ;
     }
 
     p = M_CheckParmWithArgs("-rdm-fixedcamera", 4);
