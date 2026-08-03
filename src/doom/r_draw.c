@@ -90,12 +90,36 @@ fixed_t			dc_texturemid;
 // ResearchDoom: column depth and object id
 fixed_t                 dc_depth;
 int unsigned            dc_objectid ;
+int                     dc_postlength = 0;
 
 // first pixel in a column (possibly virtual) 
 byte*			dc_source;		
 
 // just for profiling 
 int			dccount;
+
+static inline byte R_SampleColumnTexel(fixed_t frac)
+{
+    int sample_index;
+
+    if (dc_postlength <= 0)
+    {
+        return dc_source[(frac >> FRACBITS) & 127];
+    }
+
+    sample_index = frac >> FRACBITS;
+
+    if (sample_index < 0)
+    {
+        sample_index = 0;
+    }
+    else if (sample_index >= dc_postlength)
+    {
+        sample_index = dc_postlength - 1;
+    }
+
+    return dc_source[sample_index];
+}
 
 //
 // A column is a vertical slice/span from a wall texture that,
@@ -147,7 +171,7 @@ void R_DrawColumn (void)
     {
 	// Re-map color indices from wall texture column
 	//  using a lighting/special effects LUT.
-        *dest = dc_colormap[dc_source[(frac>>FRACBITS)&127]];
+        *dest = dc_colormap[R_SampleColumnTexel(frac)];
 
         if (rdmIsRecording) {
             if (rdmRecordingMode & kRecordingModeMaskDepth) {          
@@ -265,7 +289,7 @@ void R_DrawColumnLow (void)
     do 
     {
 	// Hack. Does not work corretly.
-	*dest2 = *dest = dc_colormap[dc_source[(frac>>FRACBITS)&127]];
+    *dest2 = *dest = dc_colormap[R_SampleColumnTexel(frac)];
 	dest += SCREENWIDTH;
 	dest2 += SCREENWIDTH;
 	frac += fracstep; 
@@ -485,7 +509,7 @@ void R_DrawTranslatedColumn (void)
 	//  used with PLAY sprites.
 	// Thus the "green" ramp of the player 0 sprite
 	//  is mapped to gray, red, black/indigo. 
-	*dest = dc_colormap[dc_translation[dc_source[frac>>FRACBITS]]];
+    *dest = dc_colormap[dc_translation[R_SampleColumnTexel(frac)]];
 	dest += SCREENWIDTH;
 	
 	frac += fracstep; 
@@ -535,8 +559,8 @@ void R_DrawTranslatedColumnLow (void)
 	//  used with PLAY sprites.
 	// Thus the "green" ramp of the player 0 sprite
 	//  is mapped to gray, red, black/indigo. 
-	*dest = dc_colormap[dc_translation[dc_source[frac>>FRACBITS]]];
-	*dest2 = dc_colormap[dc_translation[dc_source[frac>>FRACBITS]]];
+    *dest = dc_colormap[dc_translation[R_SampleColumnTexel(frac)]];
+    *dest2 = dc_colormap[dc_translation[R_SampleColumnTexel(frac)]];
 	dest += SCREENWIDTH;
 	dest2 += SCREENWIDTH;
 	

@@ -31,6 +31,7 @@ extern fixed_t		dc_iscale;
 extern fixed_t		dc_texturemid;
 extern fixed_t          dc_depth ;
 extern int unsigned     dc_objectid ;
+extern int              dc_postlength;
 
 // first pixel in a column
 extern byte*		dc_source;		
