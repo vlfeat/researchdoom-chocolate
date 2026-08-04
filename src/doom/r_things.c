@@ -367,6 +367,7 @@ void R_DrawMaskedColumn (column_t* column)
 	if (dc_yl <= dc_yh)
 	{
 	    dc_source = (byte *)column + 3;
+        dc_postlength = column->length;
 	    dc_texturemid = basetexturemid - (column->topdelta<<FRACBITS);
 	    // dc_source = (byte *)column + 3 - column->topdelta;
 
@@ -377,6 +378,7 @@ void R_DrawMaskedColumn (column_t* column)
 	column = (column_t *)(  (byte *)column + column->length + 4);
     }
 	
+    dc_postlength = 0;
     dc_texturemid = basetexturemid;
 }
 

@@ -29,6 +29,7 @@ extern int		dc_yl;
 extern int		dc_yh;
 extern fixed_t		dc_iscale;
 extern fixed_t		dc_texturemid;
+extern int              dc_postlength;
 extern fixed_t          dc_depth ;
 extern int unsigned     dc_objectid ;
 

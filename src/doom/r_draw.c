@@ -21,6 +21,8 @@
 
 
 
+#include <assert.h>
+
 #include "doomdef.h"
 #include "deh_main.h"
 
@@ -86,6 +88,7 @@ int			dc_yl;
 int			dc_yh; 
 fixed_t			dc_iscale; 
 fixed_t			dc_texturemid;
+int                     dc_postlength;
 
 // ResearchDoom: column depth and object id
 fixed_t                 dc_depth;
@@ -96,6 +99,40 @@ byte*			dc_source;
 
 // just for profiling 
 int			dccount;
+
+static inline byte R_ReadColumnTexel(fixed_t frac)
+{
+    int sample;
+
+    sample = frac >> FRACBITS;
+
+    if (dc_postlength > 0)
+    {
+        assert(sample >= 0);
+        assert(sample < dc_postlength);
+        return dc_source[sample];
+    }
+
+    return dc_source[sample & 127];
+}
+
+static inline fixed_t R_ComputeFracStepReduction(int count)
+{
+    int k_term;
+    int q_term;
+    int numerator;
+
+    if (dc_postlength <= 0 || count <= 0)
+    {
+        return 0;
+    }
+
+    k_term = dc_yl > centery ? dc_yl - centery : 0;
+    q_term = dc_yh < centery ? centery - dc_yh : 0;
+    numerator = k_term > q_term ? k_term : q_term;
+
+    return numerator / count + 1;
+}
 
 //
 // A column is a vertical slice/span from a wall texture that,
@@ -133,7 +170,14 @@ void R_DrawColumn (void)
     // Determine scaling,
     //  which is the only mapping to be done.
     fracstep = dc_iscale; 
+#ifdef RDM_FIX
+    // ResearchDoom +(centery  < dc_yl)) fix to avoid very rare overflows.
+    frac = dc_texturemid + (dc_yl-centery)*(fracstep + (centery  < dc_yl));
+    fracstep -= R_ComputeFracStepReduction(count);
+#else
     frac = dc_texturemid + (dc_yl-centery)*fracstep;
+
+#endif
 
     // ResearchDoom. Store column depth instead of texture.
     // This code does walls and sprites.
@@ -147,7 +191,7 @@ void R_DrawColumn (void)
     {
 	// Re-map color indices from wall texture column
 	//  using a lighting/special effects LUT.
-        *dest = dc_colormap[dc_source[(frac>>FRACBITS)&127]];
+        *dest = dc_colormap[R_ReadColumnTexel(frac)];
 
         if (rdmIsRecording) {
             if (rdmRecordingMode & kRecordingModeMaskDepth) {          
@@ -260,12 +304,19 @@ void R_DrawColumnLow (void)
     dest2 = ylookup[dc_yl] + columnofs[x+1];
     
     fracstep = dc_iscale; 
+#ifdef RDM_FIX
+    // ResearchDoom +(centery  < dc_yl)) fix to avoid very rare overflows.
+    frac = dc_texturemid + (dc_yl-centery)*(fracstep + (centery  < dc_yl));
+    fracstep -= R_ComputeFracStepReduction(count);
+#else
     frac = dc_texturemid + (dc_yl-centery)*fracstep;
+    fracstep -= 2;
+#endif
     
     do 
     {
 	// Hack. Does not work corretly.
-	*dest2 = *dest = dc_colormap[dc_source[(frac>>FRACBITS)&127]];
+    *dest2 = *dest = dc_colormap[R_ReadColumnTexel(frac)];
 	dest += SCREENWIDTH;
 	dest2 += SCREENWIDTH;
 	frac += fracstep; 
@@ -475,7 +526,14 @@ void R_DrawTranslatedColumn (void)
 
     // Looks familiar.
     fracstep = dc_iscale; 
-    frac = dc_texturemid + (dc_yl-centery)*fracstep; 
+#ifdef RDM_FIX
+    // ResearchDoom +(centery  < dc_yl)) fix to avoid very rare overflows.
+    frac = dc_texturemid + (dc_yl-centery)*(fracstep + (centery  < dc_yl));
+    fracstep -= R_ComputeFracStepReduction(count);
+#else
+    frac = dc_texturemid + (dc_yl-centery)*fracstep;
+    fracstep -= 2;
+#endif
 
     // Here we do an additional index re-mapping.
     do 
@@ -485,7 +543,7 @@ void R_DrawTranslatedColumn (void)
 	//  used with PLAY sprites.
 	// Thus the "green" ramp of the player 0 sprite
 	//  is mapped to gray, red, black/indigo. 
-	*dest = dc_colormap[dc_translation[dc_source[frac>>FRACBITS]]];
+    *dest = dc_colormap[dc_translation[R_ReadColumnTexel(frac)]];
 	dest += SCREENWIDTH;
 	
 	frac += fracstep; 
@@ -525,7 +583,14 @@ void R_DrawTranslatedColumnLow (void)
 
     // Looks familiar.
     fracstep = dc_iscale; 
-    frac = dc_texturemid + (dc_yl-centery)*fracstep; 
+#ifdef RDM_FIX
+    // ResearchDoom +(centery  < dc_yl)) fix to avoid very rare overflows.
+    frac = dc_texturemid + (dc_yl-centery)*(fracstep + (centery  < dc_yl));
+    fracstep -= R_ComputeFracStepReduction(count);
+#else
+    frac = dc_texturemid + (dc_yl-centery)*fracstep;
+    fracstep -= 2;
+#endif
 
     // Here we do an additional index re-mapping.
     do 
@@ -535,8 +600,8 @@ void R_DrawTranslatedColumnLow (void)
 	//  used with PLAY sprites.
 	// Thus the "green" ramp of the player 0 sprite
 	//  is mapped to gray, red, black/indigo. 
-	*dest = dc_colormap[dc_translation[dc_source[frac>>FRACBITS]]];
-	*dest2 = dc_colormap[dc_translation[dc_source[frac>>FRACBITS]]];
+    *dest = dc_colormap[dc_translation[R_ReadColumnTexel(frac)]];
+    *dest2 = dc_colormap[dc_translation[R_ReadColumnTexel(frac)]];
 	dest += SCREENWIDTH;
 	dest2 += SCREENWIDTH;
 	

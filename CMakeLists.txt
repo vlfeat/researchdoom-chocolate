@@ -33,8 +33,13 @@ endif()
 option(CMAKE_FIND_PACKAGE_PREFER_CONFIG
        "Lookup package config files before using find modules" On)
 
+option(ENABLE_RDM_FIX "Enable ResearchDoom fixes" On)
 option(ENABLE_SDL2_NET "Enable SDL2_net" On)
 option(ENABLE_SDL2_MIXER "Enable SDL2_mixer" On)
+
+if(ENABLE_RDM_FIX)
+    add_compile_definitions($<$<COMPILE_LANGUAGE:C>:RDM_FIX=1>)
+endif()
 
 if (NOT DEFINED EMSCRIPTEN)
     find_package(SDL2 2.0.14)
