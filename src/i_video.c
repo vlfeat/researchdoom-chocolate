@@ -338,8 +338,11 @@ static void HandleWindowEvent(SDL_WindowEvent *event)
             break;
 
         case SDL_WINDOWEVENT_RESIZED:
-            need_resize = true;
-            last_resize_time = SDL_GetTicks();
+            if (!rdmIsRecording)
+            {
+                need_resize = true;
+                last_resize_time = SDL_GetTicks();
+            }
             break;
 
         // Don't render the screen when the window is minimized:
@@ -388,6 +391,11 @@ static void HandleWindowEvent(SDL_WindowEvent *event)
 static boolean ToggleFullScreenKeyShortcut(SDL_Keysym *sym)
 {
     Uint16 flags = (KMOD_LALT | KMOD_RALT);
+
+    if (rdmIsRecording)
+    {
+        return false;
+    }
 #if defined(__MACOSX__)
     flags |= (KMOD_LGUI | KMOD_RGUI);
 #endif
@@ -1220,8 +1228,13 @@ static void SetVideoMode(void)
     h = window_height;
 
     // In windowed mode, the window can be resized while the game is
-    // running.
-    window_flags = SDL_WINDOW_RESIZABLE;
+    // running, unless ResearchDoom capture is active.
+    window_flags = 0;
+
+    if (!rdmIsRecording)
+    {
+        window_flags |= SDL_WINDOW_RESIZABLE;
+    }
 
     // Set the highdpi flag - this makes a big difference on Macs with
     // retina displays, especially when using small window sizes.
@@ -1270,7 +1283,16 @@ static void SetVideoMode(void)
             SDL_GetError());
         }
 
-        SDL_SetWindowMinimumSize(screen, SCREENWIDTH, actualheight);
+        if (rdmIsRecording && !fullscreen)
+        {
+            SDL_SetWindowResizable(screen, SDL_FALSE);
+            SDL_SetWindowMinimumSize(screen, window_width, window_height);
+            SDL_SetWindowMaximumSize(screen, window_width, window_height);
+        }
+        else
+        {
+            SDL_SetWindowMinimumSize(screen, SCREENWIDTH, actualheight);
+        }
 
         I_InitWindowTitle();
         I_InitWindowIcon();
